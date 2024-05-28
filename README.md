@@ -53,3 +53,4 @@ Check then both to add both options in context menu.
 - [expandtesting API demonstration page](https://www.youtube.com/watch?v=bQYvS6EEBZc)
 - [Faker](https://fakerjs.dev/guide/)
 - [Cypress Table of Contents](https://docs.cypress.io/api/table-of-contents)
+- [cypress-io/github-action](https://www.npmjs.com/package/@cypress/github-action#end-to-end-testing)
