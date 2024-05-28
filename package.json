@@ -1,0 +1,11 @@
+{
+  "name": "cypress-expandtesting_UI_and_API",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Adriano Santos",
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "cypress-plugin-api": "^2.11.1"
+  }
+}
