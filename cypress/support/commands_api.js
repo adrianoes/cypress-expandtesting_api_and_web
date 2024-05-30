@@ -1,28 +1,4 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import { faker } from '@faker-js/faker'
 
 Cypress.Commands.add('logInUser', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -65,4 +41,34 @@ Cypress.Commands.add('deleteUser', () => {
         })
     })
 })
+
+Cypress.Commands.add('createUser', () => {
+    const user = {
+        name: faker.internet.userName(),
+        email: faker.internet.exampleEmail(),
+        password: faker.internet.password({ length: 8 })
+      }
+    cy.api({
+        method: 'POST',
+        url: '/users/register',
+        body: {
+            name: user.name,
+            email: user.email,
+            password: user.password
+          },
+    }).then(response => {
+        expect(response.status).to.eq(201)
+        expect(response.body.message).to.eq("User account created successfully")
+        cy.log(JSON.stringify(response.body.message))
+        cy.writeFile('cypress/fixtures/api.json', {
+            "user_id": response.body.data.id,
+            "user_name": response.body.data.name,
+            "user_email": response.body.data.email,
+            "user_password": user.password
+        })
+    })
+})
+
+
+
 
