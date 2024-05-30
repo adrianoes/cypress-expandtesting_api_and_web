@@ -5,6 +5,7 @@ module.exports = defineConfig({
 })
 
 module.exports = defineConfig({
+  video: true,
   e2e: {
     viewportWidth: 1920,
     viewportHeight: 1080,
