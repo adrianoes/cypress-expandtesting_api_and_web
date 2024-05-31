@@ -81,45 +81,126 @@ describe('/notes_api', () => {
         cy.deleteUser()         
     })
 
-    // it('Retrieve user profile information', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()      
-    // })
+    it('Get note by ID', () => {
+        cy.createUser()
+        cy.logInUser() 
+        cy.createNote() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const note_title = response.note_title;
+            const note_description = response.note_description;
+            const note_category = response.note_category;
+            const user_id = response.user_id;
+            const user_token = response.user_token;
+            cy.api({
+                method: 'GET',
+                url: '/notes/' + note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user_token },
+            }).then(response => {
+                expect(response.status).to.eq(200); 
+                expect(response.body.message).to.eq("Note successfully retrieved")
+                expect(response.body.data.id).to.eq(note_id)
+                expect(response.body.data.title).to.eq(note_title)
+                expect(response.body.data.description).to.eq(note_description)
+                expect(response.body.data.category).to.eq(note_category)
+                expect(response.body.data.user_id).to.eq(user_id)
+            })
+        })  
+        cy.deleteNote()   
+        cy.deleteUser()         
+    })
 
-    // it('Update the user profile information', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()       
-    // })
+    it('Update an existing note', () => {
+        cy.createUser()
+        cy.logInUser() 
+        cy.createNote() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const note_title = response.note_title;
+            const note_description = response.note_description;
+            const user_id = response.user_id;
+            const user_token = response.user_token;
+            const completed = faker.helpers.arrayElement(['true', 'false'])
+            const category = response.note_category;
+            cy.api({
+                method: 'PUT',
+                url: '/notes/' + note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user_token },
+                body: {
+                    title: faker.word.words(3),
+                    description: faker.word.words(5),
+                    completed: completed,
+                    category: category
+                },
+            }).then(response => {
+                expect(response.status).to.eq(200); 
+                expect(response.body.message).to.eq("Note successfully Updated")
+                expect(response.body.data.id).to.eq(note_id)
+                expect(response.body.data.title).to.not.eq(note_title)
+                expect(response.body.data.description).to.not.eq(note_description)
+                expect(response.body.data.description).to.not.eq(completed)
+                expect(response.body.data.user_id).to.eq(user_id)
+            })
+        })  
+        cy.deleteNote()   
+        cy.deleteUser()         
+    })
 
-    // it('Send password reset link to user\'s email', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()        
-    // })
+    it('Update the completed status of a note', () => {
+        cy.createUser()
+        cy.logInUser() 
+        cy.createNote() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const note_title = response.note_title;
+            const note_description = response.note_description;
+            const user_id = response.user_id;
+            const user_token = response.user_token;
+            const completed = true;
+            const category = response.note_category;
+            cy.api({
+                method: 'PATCH',
+                url: '/notes/' + note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user_token },
+                //here, it must have the completed status hardcoded to be sure that it is updated
+                body: {
+                    completed: false
+                },
+            }).then(response => {
+                expect(response.status).to.eq(200); 
+                expect(response.body.message).to.eq("Note successfully Updated")
+                expect(response.body.data.id).to.eq(note_id)
+                expect(response.body.data.title).to.eq(note_title)
+                expect(response.body.data.description).to.eq(note_description)
+                expect(response.body.data.category).to.eq(category)
+                expect(response.body.data.completed).to.eq(false)
+                expect(response.body.data.user_id).to.eq(user_id)
+            })
+        })  
+        cy.deleteNote()   
+        cy.deleteUser()         
+    })
 
-    // it('Change a user\'s password', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()        
-    // })
-
-    // it('Log out a user', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()     
-    // })
-
-    // it('Delete user account', () => {
-    //     cy.createUser()
-    //     cy.logInUser() 
-        
-    //     cy.deleteUser()         
-    // })
+    it('Delete a note by ID', () => {
+        cy.createUser()
+        cy.logInUser() 
+        cy.createNote() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: '/notes/' + note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user_token },
+            }).then(response => {
+                expect(response.status).to.eq(200); 
+                expect(response.body.message).to.eq("Note successfully deleted")
+            })
+        })     
+        cy.deleteUser()         
+    })
 })
