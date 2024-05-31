@@ -1,6 +1,6 @@
 # cypress-expandtesting_UI_and_API
 
-UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. When it comes to the API part, it deals with the x-www-form-urlencoded content type.  
+UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands were used, the assertion code to each test was kept in it so we can work independently in each test. 
 
 # Pre-requirements:
 
@@ -54,3 +54,7 @@ Check then both to add both options in context menu.
 - [Faker](https://fakerjs.dev/guide/)
 - [Cypress Table of Contents](https://docs.cypress.io/api/table-of-contents)
 - [cypress-io/github-action](https://www.npmjs.com/package/@cypress/github-action#end-to-end-testing)
+
+# Tips:
+
+- Requests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
