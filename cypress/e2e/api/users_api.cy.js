@@ -6,7 +6,7 @@ describe('/users_api', () => {
             name: faker.internet.userName(),
             email: faker.internet.exampleEmail(),
             password: faker.internet.password({ length: 8 })
-          }
+        }
         cy.api({
             method: 'POST',
             url: '/users/register',
@@ -14,7 +14,7 @@ describe('/users_api', () => {
                 name: user.name,
                 email: user.email,
                 password: user.password
-              },
+            },
         }).then(response => {
             expect(response.status).to.eq(201)
             expect(response.body.message).to.eq("User account created successfully")
@@ -33,25 +33,27 @@ describe('/users_api', () => {
     it('Log in as an existing user', () => {
         cy.createUser()
         cy.readFile('cypress/fixtures/api.json').then(response => {
-            const user_id = response.user_id
-            const user_name = response.user_name
-            const user_email = response.user_email
-            const user_password = response.user_password
+            const log_user = {
+                user_id: response.user_id,
+                user_name: response.user_name,
+                user_email: response.user_email,
+                user_password: response.user_password,
+            }
             cy.api({
                 method: 'POST',
                 url: '/users/login',
                 body: {
-                    email: user_email,
-                    password: user_password
-                  },
+                    email: log_user.user_email,
+                    password: log_user.user_password
+                },
             }).then(response => {
                 expect(response.status).to.eq(200)
                 cy.log(JSON.stringify(response.body.name))
                 cy.writeFile('cypress/fixtures/api.json', {
-                    "user_id": user_id,
-                    "user_name": user_name,
-                    "user_email": user_email,
-                    "user_password": user_password,
+                    "user_id": log_user.user_id,
+                    "user_name": log_user.user_name,
+                    "user_email": log_user.user_email,
+                    "user_password": log_user.user_password,
                     "user_token": response.body.data.token,
                 })
             })
@@ -118,7 +120,7 @@ describe('/users_api', () => {
                 url: '/users/forgot-password',
                 body: {
                     email: user_email
-                  },
+                },
             }).then(response => {
                 expect(response.status).to.eq(200)
                 expect(response.body.message).to.eq('Password reset link successfully sent to ' + user_email + '. Please verify by clicking on the given link')
@@ -143,7 +145,7 @@ describe('/users_api', () => {
                 body: {
                     currentPassword: password,
                     newPassword: updated_password
-                  },
+                },
             }).then(response => {
                 expect(response.status).to.eq(200)
                 expect(response.body.message).to.eq('The password was successfully updated')

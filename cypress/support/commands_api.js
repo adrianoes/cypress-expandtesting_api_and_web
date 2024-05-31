@@ -2,25 +2,27 @@ import { faker } from '@faker-js/faker'
 
 Cypress.Commands.add('logInUser', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
-        const user_id = response.user_id
-        const user_name = response.user_name
-        const user_email = response.user_email
-        const user_password = response.user_password
+        const log_user = {
+            user_id: response.user_id,
+            user_name: response.user_name,
+            user_email: response.user_email,
+            user_password: response.user_password,
+        }
         cy.api({
             method: 'POST',
             url: '/users/login',
             body: {
-                email: user_email,
-                password: user_password
-              },
+                email: log_user.user_email,
+                password: log_user.user_password
+            },
         }).then(response => {
             expect(response.status).to.eq(200)
             cy.log(JSON.stringify(response.body.name))
             cy.writeFile('cypress/fixtures/api.json', {
-                "user_id": user_id,
-                "user_name": user_name,
-                "user_email": user_email,
-                "user_password": user_password,
+                "user_id": log_user.user_id,
+                "user_name": log_user.user_name,
+                "user_email": log_user.user_email,
+                "user_password": log_user.user_password,
                 "user_token": response.body.data.token,
             })
         })
@@ -47,7 +49,7 @@ Cypress.Commands.add('createUser', () => {
         name: faker.internet.userName(),
         email: faker.internet.exampleEmail(),
         password: faker.internet.password({ length: 8 })
-      }
+    }
     cy.api({
         method: 'POST',
         url: '/users/register',
@@ -55,7 +57,7 @@ Cypress.Commands.add('createUser', () => {
             name: user.name,
             email: user.email,
             password: user.password
-          },
+        },
     }).then(response => {
         expect(response.status).to.eq(201)
         expect(response.body.message).to.eq("User account created successfully")
@@ -129,10 +131,12 @@ Cypress.Commands.add('createSecondNote', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {  
         const user_token = response.user_token;
         const user_id = response.user_id;
-        const note_id = response.note_id;
-        const note_title = response.note_title;
-        const note_description = response.note_description;
-        const note_category = response.note_category;
+        const note = {
+            note_id: response.note_id,
+            note_title: response.note_title,
+            note_description: response.note_description,
+            note_category: response.note_category,
+        }
         const second_note = {            
             second_title: faker.word.words(4),
             second_description: faker.word.words(5),
@@ -162,10 +166,10 @@ Cypress.Commands.add('createSecondNote', () => {
                 "second_note_description": response.body.data.description,
                 "second_note_category": response.body.data.category,
                 "user_id": user_id,
-                "note_id": note_id,
-                "note_title": note_title,
-                "note_description": note_description,
-                "note_category": note_category,
+                "note_id": note.note_id,
+                "note_title": note.note_title,
+                "note_description": note.note_description,
+                "note_category": note.note_category,
                 "user_token": user_token
             })                
         })            

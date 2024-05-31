@@ -46,15 +46,19 @@ describe('/notes_api', () => {
         cy.createNote() 
         cy.createSecondNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
-            const note_id = response.note_id;
-            const note_title = response.note_title;
-            const note_description = response.note_description;
-            const note_category = response.note_category;
+            const note = {
+                note_id: response.note_id,
+                note_title: response.note_title,
+                note_description: response.note_description,
+                note_category: response.note_category
+            }
+            const second_note = {
+                second_note_id: response.second_note_id,
+                second_note_title: response.second_note_title,
+                second_note_description: response.second_note_description,
+                second_note_category: response.second_note_category
+            }
             const user_id = response.user_id;
-            const second_note_id = response.second_note_id;
-            const second_note_title = response.second_note_title;
-            const second_note_description = response.second_note_description;
-            const second_note_category = response.second_note_category;
             const user_token = response.user_token;
             cy.api({
                 method: 'GET',
@@ -64,15 +68,15 @@ describe('/notes_api', () => {
             }).then(response => {
                 expect(response.status).to.eq(200); 
                 expect(response.body.message).to.eq("Notes successfully retrieved")
-                expect(response.body.data[1].id).to.eq(note_id)
-                expect(response.body.data[1].title).to.eq(note_title)
-                expect(response.body.data[1].description).to.eq(note_description)
-                expect(response.body.data[1].category).to.eq(note_category)
+                expect(response.body.data[1].id).to.eq(note.note_id)
+                expect(response.body.data[1].title).to.eq(note.note_title)
+                expect(response.body.data[1].description).to.eq(note.note_description)
+                expect(response.body.data[1].category).to.eq(note.note_category)
                 expect(response.body.data[1].user_id).to.eq(user_id)
-                expect(response.body.data[0].id).to.eq(second_note_id)
-                expect(response.body.data[0].title).to.eq(second_note_title)
-                expect(response.body.data[0].description).to.eq(second_note_description)
-                expect(response.body.data[0].category).to.eq(second_note_category)
+                expect(response.body.data[0].id).to.eq(second_note.second_note_id)
+                expect(response.body.data[0].title).to.eq(second_note.second_note_title)
+                expect(response.body.data[0].description).to.eq(second_note.second_note_description)
+                expect(response.body.data[0].category).to.eq(second_note.second_note_category)
                 expect(response.body.data[0].user_id).to.eq(user_id)
             })
         })  
@@ -86,24 +90,26 @@ describe('/notes_api', () => {
         cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
-            const note_id = response.note_id;
-            const note_title = response.note_title;
-            const note_description = response.note_description;
-            const note_category = response.note_category;
+            const note = {
+                note_id: response.note_id,
+                note_title: response.note_title,
+                note_description: response.note_description,
+                note_category: response.note_category
+            }
             const user_id = response.user_id;
             const user_token = response.user_token;
             cy.api({
                 method: 'GET',
-                url: '/notes/' + note_id,
+                url: '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
                 expect(response.status).to.eq(200); 
                 expect(response.body.message).to.eq("Note successfully retrieved")
-                expect(response.body.data.id).to.eq(note_id)
-                expect(response.body.data.title).to.eq(note_title)
-                expect(response.body.data.description).to.eq(note_description)
-                expect(response.body.data.category).to.eq(note_category)
+                expect(response.body.data.id).to.eq(note.note_id)
+                expect(response.body.data.title).to.eq(note.note_title)
+                expect(response.body.data.description).to.eq(note.note_description)
+                expect(response.body.data.category).to.eq(note.note_category)
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
@@ -116,31 +122,33 @@ describe('/notes_api', () => {
         cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
-            const note_id = response.note_id;
-            const note_title = response.note_title;
-            const note_description = response.note_description;
+            const note = {
+                note_id: response.note_id,
+                note_title: response.note_title,
+                note_description: response.note_description,
+                note_category: response.note_category
+            }
             const user_id = response.user_id;
             const user_token = response.user_token;
             const completed = faker.helpers.arrayElement(['true', 'false'])
-            const category = response.note_category;
             cy.api({
                 method: 'PUT',
-                url: '/notes/' + note_id,
+                url: '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 body: {
                     title: faker.word.words(3),
                     description: faker.word.words(5),
                     completed: completed,
-                    category: category
+                    category: note.note_category
                 },
             }).then(response => {
                 expect(response.status).to.eq(200); 
                 expect(response.body.message).to.eq("Note successfully Updated")
-                expect(response.body.data.id).to.eq(note_id)
-                expect(response.body.data.title).to.not.eq(note_title)
-                expect(response.body.data.description).to.not.eq(note_description)
-                expect(response.body.data.description).to.not.eq(completed)
+                expect(response.body.data.id).to.eq(note.note_id)
+                expect(response.body.data.title).to.not.eq(note.note_title)
+                expect(response.body.data.description).to.not.eq(note.note_description)
+                expect(response.body.data.completed).to.not.eq(completed)
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
@@ -153,16 +161,18 @@ describe('/notes_api', () => {
         cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
-            const note_id = response.note_id;
-            const note_title = response.note_title;
-            const note_description = response.note_description;
+            const note = {
+                note_id: response.note_id,
+                note_title: response.note_title,
+                note_description: response.note_description,
+                note_category: response.note_category
+            }
             const user_id = response.user_id;
             const user_token = response.user_token;
             const completed = true;
-            const category = response.note_category;
             cy.api({
                 method: 'PATCH',
-                url: '/notes/' + note_id,
+                url: '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 //here, it must have the completed status hardcoded to be sure that it is updated
@@ -172,11 +182,11 @@ describe('/notes_api', () => {
             }).then(response => {
                 expect(response.status).to.eq(200); 
                 expect(response.body.message).to.eq("Note successfully Updated")
-                expect(response.body.data.id).to.eq(note_id)
-                expect(response.body.data.title).to.eq(note_title)
-                expect(response.body.data.description).to.eq(note_description)
-                expect(response.body.data.category).to.eq(category)
-                expect(response.body.data.completed).to.eq(false)
+                expect(response.body.data.id).to.eq(note.note_id)
+                expect(response.body.data.title).to.eq(note.note_title)
+                expect(response.body.data.description).to.eq(note.note_description)
+                expect(response.body.data.category).to.eq(note.note_category)
+                expect(response.body.data.completed).to.not.eq(completed)
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
