@@ -8,7 +8,7 @@ describe('/users_api', () => {
         cy.writeFile('cypress/fixtures/api.json', '')
     });
     
-    it('Creates a new user account', () => {
+    it('Creates a new user account via API', () => {
         const user = {
             name: faker.internet.userName(),
             email: faker.internet.exampleEmail(),
@@ -33,12 +33,12 @@ describe('/users_api', () => {
                 "user_password": user.password
             })
         })
-        cy.logInUser() 
-        cy.deleteUser()        
+        cy.logInUserViaApi() 
+        cy.deleteUserViaApi()        
     })
 
-    it('Log in as an existing user', () => {
-        cy.createUser()
+    it('Log in as an existing user via API', () => {
+        cy.createUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const log_user = {
                 user_id: response.user_id,
@@ -65,12 +65,12 @@ describe('/users_api', () => {
                 })
             })
         }) 
-        cy.deleteUser()        
+        cy.deleteUserViaApi()        
     })
 
-    it('Retrieve user profile information', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Retrieve user profile information via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user_token = response.user_token;
             cy.api({
@@ -83,12 +83,12 @@ describe('/users_api', () => {
                 expect(response.body.message).to.eq("Profile successful")
             })
         })   
-        cy.deleteUser()      
+        cy.deleteUserViaApi()      
     })
 
-    it('Update the user profile information', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Update the user profile information via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {            
             const user_name = response.user_name;
             const user_token = response.user_token;
@@ -114,12 +114,12 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         })
-        cy.deleteUser()        
+        cy.deleteUserViaApi()        
     })
 
-    it('Send password reset link to user\'s email', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Send password reset link to user\'s email via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user_email = response.user_email
             cy.api({
@@ -134,12 +134,12 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         }) 
-        cy.deleteUser()        
+        cy.deleteUserViaApi()        
     })
 
-    it('Change a user\'s password', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Change a user\'s password via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const password = response.user_password;
             const user_token = response.user_token;
@@ -159,12 +159,12 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         }) 
-        cy.deleteUser()        
+        cy.deleteUserViaApi()        
     })
 
-    it('Log out a user', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Log out a user via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user_token = response.user_token;
             cy.api({
@@ -177,13 +177,13 @@ describe('/users_api', () => {
                 expect(response.body.message).to.eq("User has been successfully logged out")
             })
         })  
-        cy.logInUser()
-        cy.deleteUser()      
+        cy.logInUserViaApi()
+        cy.deleteUserViaApi()      
     })
 
-    it('Delete user account', () => {
-        cy.createUser()
-        cy.logInUser()
+    it('Delete user account via API', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user_token = response.user_token;
             cy.api({

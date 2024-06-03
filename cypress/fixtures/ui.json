@@ -1,5 +1,5 @@
 {
-  "name": "Using fixtures to represent data",
-  "email": "hello@cypress.io",
-  "body": "Fixtures are a great way to mock data for responses to routes"
+  "user_email": "Bethany77@example.net",
+  "user_name": "Nya.VonRueden13",
+  "user_password": "9hiSTFpD"
 }

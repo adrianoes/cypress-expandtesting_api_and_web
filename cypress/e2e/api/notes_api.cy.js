@@ -5,16 +5,16 @@ describe('/notes_api', () => {
     const baseApiUrl = `${Cypress.env('baseApiUrl')}`
 
     beforeEach(function () {
-        cy.createUser()
-        cy.logInUser() 
+        cy.createUserViaApi()
+        cy.logInUserViaApi() 
     });
 
     afterEach(function () {        
-        cy.deleteUser()
+        cy.deleteUserViaApi()
         cy.writeFile('cypress/fixtures/api.json', '')
     });
 
-    it('Creates a new note', () => {
+    it('Creates a new note via API', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {  
             const user_token = response.user_token;
             const user_id = response.user_id;
@@ -47,12 +47,12 @@ describe('/notes_api', () => {
                 })                
             })            
         })     
-        cy.deleteNote()           
+        cy.deleteNoteViaApi()           
     })
 
-    it('Get all notes', () => {
-        cy.createNote() 
-        cy.createSecondNote() 
+    it('Get all notes via API', () => {
+        cy.createNoteViaApi() 
+        cy.createSecondNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
                 note_id: response.note_id,
@@ -88,12 +88,12 @@ describe('/notes_api', () => {
                 expect(response.body.data[0].user_id).to.eq(user_id)
             })
         })  
-        cy.deleteSecondNote()
-        cy.deleteNote()         
+        cy.deleteSecondNoteViaApi()
+        cy.deleteNoteViaApi()         
     })
 
-    it('Get note by ID', () => {
-        cy.createNote() 
+    it('Get note by ID via API', () => {
+        cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
                 note_id: response.note_id,
@@ -118,11 +118,11 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()         
+        cy.deleteNoteViaApi()         
     })
 
-    it('Update an existing note', () => {
-        cy.createNote() 
+    it('Update an existing note via API', () => {
+        cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
                 note_id: response.note_id,
@@ -154,11 +154,11 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()        
+        cy.deleteNoteViaApi()        
     })
 
-    it('Update the completed status of a note', () => {
-        cy.createNote() 
+    it('Update the completed status of a note via API', () => {
+        cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
                 note_id: response.note_id,
@@ -189,11 +189,11 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()         
+        cy.deleteNoteViaApi()         
     })
 
-    it('Delete a note by ID', () => {
-        cy.createNote() 
+    it('Delete a note by ID via API', () => {
+        cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note_id = response.note_id;
             const user_token = response.user_token;

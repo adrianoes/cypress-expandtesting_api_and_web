@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 const baseApiUrl = `${Cypress.env('baseApiUrl')}`
 
-Cypress.Commands.add('logInUser', () => {
+Cypress.Commands.add('logInUserViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
         const log_user = {
             user_id: response.user_id,
@@ -31,7 +31,7 @@ Cypress.Commands.add('logInUser', () => {
     })
 })
 
-Cypress.Commands.add('deleteUser', () => {
+Cypress.Commands.add('deleteUserViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
         const user_token = response.user_token;
         cy.api({
@@ -46,7 +46,7 @@ Cypress.Commands.add('deleteUser', () => {
     })
 })
 
-Cypress.Commands.add('createUser', () => {
+Cypress.Commands.add('createUserViaApi', () => {
     const user = {
         name: faker.internet.userName(),
         email: faker.internet.exampleEmail(),
@@ -73,7 +73,7 @@ Cypress.Commands.add('createUser', () => {
     })
 })
 
-Cypress.Commands.add('deleteNote', () => {
+Cypress.Commands.add('deleteNoteViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
         const note_id = response.note_id;
         const user_token = response.user_token;
@@ -89,7 +89,7 @@ Cypress.Commands.add('deleteNote', () => {
     })
 })
 
-Cypress.Commands.add('createNote', () => {
+Cypress.Commands.add('createNoteViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {  
         const user_token = response.user_token;
         const user_id = response.user_id;
@@ -129,7 +129,7 @@ Cypress.Commands.add('createNote', () => {
     }) 
 })
 
-Cypress.Commands.add('createSecondNote', () => {
+Cypress.Commands.add('createSecondNoteViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {  
         const user_token = response.user_token;
         const user_id = response.user_id;
@@ -178,7 +178,7 @@ Cypress.Commands.add('createSecondNote', () => {
     }) 
 })
 
-Cypress.Commands.add('deleteSecondNote', () => {
+Cypress.Commands.add('deleteSecondNoteViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
         const second_note_id = response.second_note_id;
         const user_token = response.user_token;
