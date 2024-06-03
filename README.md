@@ -41,7 +41,7 @@ Check then both to add both options in context menu.
 - Hit :point_right:**Scaffold example specs**, so you can be provided with examples that might be useful.
 - Hit :point_right:**Okay, I got it!**. Choose a spec and click it to run it to be sure that cypress is running and working fine. You can now develop your tests.
 
-# Tests
+# Tests:
 
 - Execute ```yarn cypress open``` to open cypress app and execute step by step, being able to debug the execution. 
 - Execute ```yarn cypress run``` to execute cypress in headless mode.
@@ -57,4 +57,4 @@ Check then both to add both options in context menu.
 
 # Tips:
 
-- Requests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
+- API tests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.

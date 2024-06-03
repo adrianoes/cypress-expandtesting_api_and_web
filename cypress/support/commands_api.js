@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker'
 
+const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+
 Cypress.Commands.add('logInUser', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
         const log_user = {
@@ -10,7 +12,7 @@ Cypress.Commands.add('logInUser', () => {
         }
         cy.api({
             method: 'POST',
-            url: '/users/login',
+            url: baseApiUrl + '/users/login',
             body: {
                 email: log_user.user_email,
                 password: log_user.user_password
@@ -34,7 +36,7 @@ Cypress.Commands.add('deleteUser', () => {
         const user_token = response.user_token;
         cy.api({
             method: 'DELETE',
-            url: '/users/delete-account',
+            url: baseApiUrl + '/users/delete-account',
             form: true, //sets to application/x-www-form-urlencoded
             headers: { 'X-Auth-Token': user_token },
         }).then(response => {
@@ -52,7 +54,7 @@ Cypress.Commands.add('createUser', () => {
     }
     cy.api({
         method: 'POST',
-        url: '/users/register',
+        url: baseApiUrl + '/users/register',
         body: {
             name: user.name,
             email: user.email,
@@ -77,7 +79,7 @@ Cypress.Commands.add('deleteNote', () => {
         const user_token = response.user_token;
         cy.api({
             method: 'DELETE',
-            url: '/notes/' + note_id,
+            url: baseApiUrl + '/notes/' + note_id,
             form: true, //sets to application/x-www-form-urlencoded
             headers: { 'X-Auth-Token': user_token },
         }).then(response => {
@@ -98,7 +100,7 @@ Cypress.Commands.add('createNote', () => {
         }
         cy.api({
             method: 'POST',
-            url: '/notes',
+            url: baseApiUrl + '/notes',
             form: true,
             headers: { 'X-Auth-Token': user_token },
             body: {
@@ -144,7 +146,7 @@ Cypress.Commands.add('createSecondNote', () => {
         }
         cy.api({
             method: 'POST',
-            url: '/notes',
+            url: baseApiUrl + '/notes',
             form: true,
             headers: { 'X-Auth-Token': user_token },
             body: {
@@ -182,7 +184,7 @@ Cypress.Commands.add('deleteSecondNote', () => {
         const user_token = response.user_token;
         cy.api({
             method: 'DELETE',
-            url: '/notes/' + second_note_id,
+            url: baseApiUrl + '/notes/' + second_note_id,
             form: true, //sets to application/x-www-form-urlencoded
             headers: { 'X-Auth-Token': user_token },
         }).then(response => {

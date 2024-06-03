@@ -1,9 +1,20 @@
 import { faker } from '@faker-js/faker'
 
 describe('/notes_api', () => {
-    it('Creates a new note', () => {
+
+    const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+
+    beforeEach(function () {
         cy.createUser()
         cy.logInUser() 
+    });
+
+    afterEach(function () {        
+        cy.deleteUser()
+        cy.writeFile('cypress/fixtures/api.json', '')
+    });
+
+    it('Creates a new note', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {  
             const user_token = response.user_token;
             const user_id = response.user_id;
@@ -14,7 +25,7 @@ describe('/notes_api', () => {
             }
             cy.api({
                 method: 'POST',
-                url: '/notes',
+                url: baseApiUrl + '/notes',
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 body: {
@@ -36,13 +47,10 @@ describe('/notes_api', () => {
                 })                
             })            
         })     
-        cy.deleteNote()   
-        cy.deleteUser()        
+        cy.deleteNote()           
     })
 
     it('Get all notes', () => {
-        cy.createUser()
-        cy.logInUser() 
         cy.createNote() 
         cy.createSecondNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -62,7 +70,7 @@ describe('/notes_api', () => {
             const user_token = response.user_token;
             cy.api({
                 method: 'GET',
-                url: '/notes',
+                url: baseApiUrl + '/notes',
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
@@ -81,13 +89,10 @@ describe('/notes_api', () => {
             })
         })  
         cy.deleteSecondNote()
-        cy.deleteNote()   
-        cy.deleteUser()         
+        cy.deleteNote()         
     })
 
     it('Get note by ID', () => {
-        cy.createUser()
-        cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
@@ -100,7 +105,7 @@ describe('/notes_api', () => {
             const user_token = response.user_token;
             cy.api({
                 method: 'GET',
-                url: '/notes/' + note.note_id,
+                url: baseApiUrl + '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
@@ -113,13 +118,10 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()   
-        cy.deleteUser()         
+        cy.deleteNote()         
     })
 
     it('Update an existing note', () => {
-        cy.createUser()
-        cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
@@ -133,7 +135,7 @@ describe('/notes_api', () => {
             const completed = faker.helpers.arrayElement(['true', 'false'])
             cy.api({
                 method: 'PUT',
-                url: '/notes/' + note.note_id,
+                url: baseApiUrl + '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 body: {
@@ -152,13 +154,10 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()   
-        cy.deleteUser()         
+        cy.deleteNote()        
     })
 
     it('Update the completed status of a note', () => {
-        cy.createUser()
-        cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note = {
@@ -172,7 +171,7 @@ describe('/notes_api', () => {
             const completed = true;
             cy.api({
                 method: 'PATCH',
-                url: '/notes/' + note.note_id,
+                url: baseApiUrl + '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 //here, it must have the completed status hardcoded to be sure that it is updated
@@ -190,27 +189,23 @@ describe('/notes_api', () => {
                 expect(response.body.data.user_id).to.eq(user_id)
             })
         })  
-        cy.deleteNote()   
-        cy.deleteUser()         
+        cy.deleteNote()         
     })
 
     it('Delete a note by ID', () => {
-        cy.createUser()
-        cy.logInUser() 
         cy.createNote() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note_id = response.note_id;
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
-                url: '/notes/' + note_id,
+                url: baseApiUrl + '/notes/' + note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
                 expect(response.status).to.eq(200); 
                 expect(response.body.message).to.eq("Note successfully deleted")
             })
-        })     
-        cy.deleteUser()         
+        })             
     })
 })

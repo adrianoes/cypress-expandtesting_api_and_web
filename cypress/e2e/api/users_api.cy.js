@@ -1,6 +1,13 @@
 import { faker } from '@faker-js/faker'
 
 describe('/users_api', () => {
+
+    const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+
+    afterEach(function () {  
+        cy.writeFile('cypress/fixtures/api.json', '')
+    });
+    
     it('Creates a new user account', () => {
         const user = {
             name: faker.internet.userName(),
@@ -9,7 +16,7 @@ describe('/users_api', () => {
         }
         cy.api({
             method: 'POST',
-            url: '/users/register',
+            url: baseApiUrl + '/users/register',
             body: {
                 name: user.name,
                 email: user.email,
@@ -41,7 +48,7 @@ describe('/users_api', () => {
             }
             cy.api({
                 method: 'POST',
-                url: '/users/login',
+                url: baseApiUrl + '/users/login',
                 body: {
                     email: log_user.user_email,
                     password: log_user.user_password
@@ -68,7 +75,7 @@ describe('/users_api', () => {
             const user_token = response.user_token;
             cy.api({
                 method: 'GET',
-                url: '/users/profile',
+                url: baseApiUrl + '/users/profile',
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
@@ -92,7 +99,7 @@ describe('/users_api', () => {
             }
             cy.api({
                 method: 'PATCH',
-                url: '/users/profile',
+                url: baseApiUrl + '/users/profile',
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 body: {
@@ -117,7 +124,7 @@ describe('/users_api', () => {
             const user_email = response.user_email
             cy.api({
                 method: 'POST',
-                url: '/users/forgot-password',
+                url: baseApiUrl + '/users/forgot-password',
                 body: {
                     email: user_email
                 },
@@ -139,7 +146,7 @@ describe('/users_api', () => {
             const updated_password = faker.internet.password({ length: 8 })
             cy.api({
                 method: 'POST',
-                url: '/users/change-password',
+                url: baseApiUrl + '/users/change-password',
                 form: true,
                 headers: { 'X-Auth-Token': user_token },
                 body: {
@@ -162,7 +169,7 @@ describe('/users_api', () => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
-                url: '/users/logout',
+                url: baseApiUrl + '/users/logout',
                 form: true, //sets to application/x-www-form-urlencoded
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
@@ -181,7 +188,7 @@ describe('/users_api', () => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
-                url: '/users/delete-account',
+                url: baseApiUrl + '/users/delete-account',
                 form: true, //sets to application/x-www-form-urlencoded
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
@@ -191,38 +198,3 @@ describe('/users_api', () => {
         })        
     })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const project = {
-    name: `project-${faker.datatype.uuid()}`,
-    description: faker.random.words(5)
-  }
