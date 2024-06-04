@@ -14,8 +14,7 @@ Cypress.Commands.add('logInUserViaUi', () => {
         cy.get('input[name="email"]').click().type(user.user_email)
         cy.get('input[name="password"]').click().type(user.user_password)
         cy.contains('button', 'Login').click()
-        cy.get('[href="/notes/app/"]').contains('Home - My Notes ').should('be.visible')
-        cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+        cy.get('input[placeholder="Search notes..."]').should('be.visible')
         cy.writeFile('cypress/fixtures/ui.json', {
             "user_email": user.user_email,
             "user_name": user.user_name,

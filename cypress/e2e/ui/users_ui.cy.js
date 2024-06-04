@@ -44,14 +44,59 @@ describe('/users_ui', () => {
             cy.get('input[name="email"]').click().type(user.user_email)
             cy.get('input[name="password"]').click().type(user.user_password)
             cy.contains('button', 'Login').click()
-            cy.get('[href="/notes/app/"]').contains('Home - My Notes ').should('be.visible')
-            cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+            cy.get('input[placeholder="Search notes..."]').should('be.visible')
             cy.writeFile('cypress/fixtures/ui.json', {
                 "user_email": user.user_email,
                 "user_name": user.user_name,
                 "user_password": user.user_password                
             })
         })
+        cy.deleteUserViaUi()       
+    })
+
+    it('Retrieve user profile information via UI', () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+        cy.deleteUserViaUi()       
+    })
+
+    it('Update user profile information via UI', () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+        cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
+        cy.get('input[name="company"]').click().type(faker.internet.userName())
+        cy.contains('button', 'Update profile').click()
+        cy.get('[data-testid="alert-message"]').contains('Profile updated successful').should('be.visible')
+        cy.deleteUserViaUi()       
+    })
+
+    it('Change a user\'s password via UI', () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const user = {
+                user_password: response.user_password,
+                new_password: faker.internet.password({ length: 8 })
+            } 
+            cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+            cy.get('[data-testid="change-password"]').contains('Change password').should('be.visible').click()
+            cy.get('input[data-testid="current-password"]').click().type(user.user_password)
+            cy.get('input[data-testid="new-password"]').click().type(user.new_password)
+            cy.get('input[data-testid="confirm-password"]').click().type(user.new_password)
+            cy.contains('button', 'Update password').click()
+            cy.get('[data-testid="alert-message"]').contains('The password was successfully updated').should('be.visible')
+        })
+        cy.deleteUserViaUi()       
+    })
+
+    it('Log out a user via UI', () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi() 
+        cy.contains('button', 'Logout').click()
+        cy.get('[href="/notes/app/login"]').contains('Login').should('be.visible')
+        cy.logInUserViaUi() 
         cy.deleteUserViaUi()       
     })
 
@@ -64,3 +109,4 @@ describe('/users_ui', () => {
         cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
     })
 })
+

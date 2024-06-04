@@ -117,26 +117,6 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Send password reset link to user\'s email via API', () => {
-        cy.createUserViaApi()
-        cy.logInUserViaApi()
-        cy.readFile('cypress/fixtures/api.json').then(response => {
-            const user_email = response.user_email
-            cy.api({
-                method: 'POST',
-                url: baseApiUrl + '/users/forgot-password',
-                body: {
-                    email: user_email
-                },
-            }).then(response => {
-                expect(response.status).to.eq(200)
-                expect(response.body.message).to.eq('Password reset link successfully sent to ' + user_email + '. Please verify by clicking on the given link')
-                cy.log(JSON.stringify(response.body.message))
-            })
-        }) 
-        cy.deleteUserViaApi()        
-    })
-
     it('Change a user\'s password via API', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()

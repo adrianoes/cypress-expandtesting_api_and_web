@@ -57,4 +57,4 @@ Check then both to add both options in context menu.
 
 # Tips:
 
-- API tests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
+- UI and API tests to send password reset link to user's email and API tests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
