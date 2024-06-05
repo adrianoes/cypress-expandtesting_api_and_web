@@ -45,10 +45,16 @@ describe('/users_ui', () => {
             cy.get('input[name="password"]').click().type(user.user_password)
             cy.contains('button', 'Login').click()
             cy.get('input[placeholder="Search notes..."]').should('be.visible')
-            cy.writeFile('cypress/fixtures/ui.json', {
+            cy.visit(baseAppUrl + 'profile')
+            //invoke 'text' to invoke text or 'val' to invoke value
+            cy.get('input[name="userId"]').invoke('val').as('user_id')
+            cy.get('@user_id').then((user_id) => {
+              cy.writeFile('cypress/fixtures/ui.json', {
+                "user_id": user_id,
                 "user_email": user.user_email,
                 "user_name": user.user_name,
-                "user_password": user.user_password                
+                "user_password": user.user_password               
+                })
             })
         })
         cy.deleteUserViaUi()       

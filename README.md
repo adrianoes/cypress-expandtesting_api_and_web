@@ -28,8 +28,8 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
   - Input the project license or keep it as it is (MIT).
   - Input "true" or "false" to select the privacy of the project in private option or keep it as it is (by default, if answer given to question private is passed in as empty, the private key will not be added to package.json).
 - See [Visual Studio Code page](https://code.visualstudio.com/) and install the latest VSC stable version. Keep all the prefereced options as they are until you reach the possibility to check the checkboxes below: 
-  - :white_check_mark: Add "Open with code" action to Windows explore file context menu. 
-  - :white_check_mark: Add "Open with code" action to windows explorer directory context menu.
+  - :white_check_mark: Add "Open with code" action to Windows Explorer file context menu. 
+  - :white_check_mark: Add "Open with code" action to Windows Explorer directory context menu.
 Check then both to add both options in context menu.
 - Look for Cypress Helper in the extensions marketplace and install the one from Oleksandr Shevtsov.
 - Execute ```npm i cypress-plugin-api -D``` to install cypress api plugin.
@@ -54,6 +54,8 @@ Check then both to add both options in context menu.
 - [Faker](https://fakerjs.dev/guide/)
 - [Cypress Table of Contents](https://docs.cypress.io/api/table-of-contents)
 - [cypress-io/github-action](https://www.npmjs.com/package/@cypress/github-action#end-to-end-testing)
+- [Cypress: store value in a variable](https://stackoverflow.com/questions/69977821/cypress-store-value-in-a-variable)
+- [Working With Variables In Cypress Tests](https://www.stevenhicks.me/blog/2020/02/working-with-variables-in-cypress-tests/)
 
 # Tips:
 
