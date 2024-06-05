@@ -85,9 +85,8 @@ Cypress.Commands.add('createNoteViaUi', ()=>{
         }
         cy.visit(baseAppUrl)
         cy.contains('button', '+ Add Note').click()
-        cy.get('[name="category"]').should('be.visible').select(note.category)        
-        cy.get('[data-testid="note-completed"]').click(note.completed)        
-        cy.get('[data-testid="note-completed"]')
+        cy.get('[name="category"]').should('be.visible').select(note.category)  //verify if faker is working here       
+        cy.get('[data-testid="note-completed"]').click(note.completed) 
         cy.get('input[name="title"]').click().type(note.title)
         cy.get('textarea[name="description"]').click().type(note.description)
         cy.contains('button', 'Create').click()
@@ -99,8 +98,11 @@ Cypress.Commands.add('createNoteViaUi', ()=>{
             "user_email": user.user_email,
             "user_name": user.user_name,
             "user_password": user.user_password,
-            "note_title": note.title               
-        })        
+            "note_title": note.title,
+            "note_description": note.description,
+            "note_category": note.category,
+            "note_completed": note.completed               
+        })         
     })
 })
 

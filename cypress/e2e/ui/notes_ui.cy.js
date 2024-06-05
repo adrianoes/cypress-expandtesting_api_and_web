@@ -28,8 +28,7 @@ describe('/notes_ui', () => {
             cy.visit(baseAppUrl)
             cy.contains('button', '+ Add Note').click()
             cy.get('[name="category"]').should('be.visible').select(note.category)        
-            cy.get('[data-testid="note-completed"]').click(note.completed)        
-            cy.get('[data-testid="note-completed"]')
+            cy.get('[data-testid="note-completed"]').click(note.completed) 
             cy.get('input[name="title"]').click().type(note.title)
             cy.get('textarea[name="description"]').click().type(note.description)
             cy.contains('button', 'Create').click()
@@ -41,7 +40,10 @@ describe('/notes_ui', () => {
                 "user_email": user.user_email,
                 "user_name": user.user_name,
                 "user_password": user.user_password,
-                "note_title": note.title               
+                "note_title": note.title,
+                "note_description": note.description,
+                "note_category": note.category,
+                "note_completed": note.completed               
             })        
         })
         cy.deleteNoteViaUi()
@@ -49,7 +51,32 @@ describe('/notes_ui', () => {
         cy.deleteUserViaUi()
     })
 
-    it.only('Delete a note via UI', () => {
+    it('Update an existing note via UI', () => {
+        //make a new one to delete it by id, maybe using note url
+        cy.createUserViaUi()
+        cy.logInUserViaUi()
+        cy.createNoteViaUi()
+        cy.contains('button', 'Edit').click()
+        const note = {            
+            title: faker.word.words(3),
+            description: faker.word.words(5),
+            category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
+            completed: faker.number.int({ min: 1, max: 2 })//find a way to validate completed status
+        }
+        cy.get('[name="category"]').should('be.visible').select(note.category)  //verify if faker is working here       
+        cy.get('[data-testid="note-completed"]').click(note.completed) 
+        cy.get('input[name="title"]').click().type(note.title)
+        cy.get('textarea[name="description"]').click().type(note.description)
+        cy.contains('button', 'Save').click()
+        cy.get('[data-testid="note-card-title"]').contains(note.title).should('be.visible')
+        cy.get('[data-testid="note-card"]').contains(note.title).should('be.visible')
+        cy.get('[data-testid="note-card"]').contains(note.description).should('be.visible')
+        // cy.get('[data-testid="note-card"]').contains(note.category).should('be.visible') //I think this is validated by the note header color. must check later
+        cy.deleteNoteViaUi()
+        cy.deleteUserViaUi()
+    })
+
+    it('Delete a note via UI', () => {
         //make a new one to delete it by id, maybe using note url
         cy.createUserViaUi()
         cy.logInUserViaUi()
