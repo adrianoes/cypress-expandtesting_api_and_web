@@ -76,6 +76,17 @@ describe('/notes_ui', () => {
         cy.deleteUserViaUi()
     })
 
+    it.only('Update the completed status of a note via UI', () => {
+        //make a new one to delete it by id, maybe using note url
+        cy.createUserViaUi()
+        cy.logInUserViaUi()
+        cy.createNoteViaUi()
+        cy.contains('button', 'Edit').click() //verify if faker is working here       
+        cy.get('[data-testid="note-completed"]').click() 
+        cy.contains('button', 'Save').click()
+        cy.deleteNoteViaUi()
+        cy.deleteUserViaUi()
+    })
     it('Delete a note via UI', () => {
         //make a new one to delete it by id, maybe using note url
         cy.createUserViaUi()
