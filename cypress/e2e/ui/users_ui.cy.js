@@ -8,7 +8,7 @@ describe('/users_ui', () => {
         cy.visit(baseAppUrl)  
     });
 
-    it('Creates a new user account via UI', () => {
+    it.only('Creates a new user account via UI', () => {
         const user = {
             name: faker.internet.userName(),
             email: faker.internet.exampleEmail(),
@@ -19,17 +19,26 @@ describe('/users_ui', () => {
         cy.get('input[name="name"]').click().type(user.name)
         cy.get('input[name="password"]').click().type(user.password)
         cy.get('input[name="confirmPassword"]').click().type(user.password)
+        //miss organize code blocks, code hooks an api commands
+        cy.intercept('/notes/api/users/register').as('loginForm')
         cy.contains('button', 'Register').click()
         cy.contains('b', 'User account created successfully').should('be.visible')
-        cy.get('[href="/notes/app/login"]').contains('Click here to Log In').should('be.visible').click()
-        cy.writeFile('cypress/fixtures/ui.json', {
-            "user_email": user.email,
-            "user_name": user.name,
-            "user_password": user.password
+        cy.get('[href="/notes/app/login"]').contains('Click here to Log In').should('be.visible').click() 
+        cy.wait('@loginForm').then(({response}) => {
+            expect(response.statusCode).to.eq(201)
+            expect(response.body.message).to.eq('User account created successfully')
+            cy.writeFile('cypress/fixtures/ui.json', {
+                "user_email": user.email,
+                "user_name": user.name,
+                "user_password": user.password,
+                "user_id": response.body.data.id
+            })
         })
         cy.logInUserViaUi()
         cy.deleteUserViaUi()
     })
+
+
 
     it('Log in as an existing user via UI', () => {
         cy.createUserViaUi()
