@@ -114,91 +114,116 @@ Cypress.Commands.add('createNotesViaUi', ()=>{
             user_name: response.user_name,
             user_password: response.user_password
         }
-        const note = {            
-            title_1: faker.word.words(3),
-            description_1: faker.word.words(5),
-            category_1: 'Home', 
-            title_2: faker.word.words(3),
-            description_2: faker.word.words(5),
-            category_2: 'Work',
-            title_3: faker.word.words(3),
-            description_3: faker.word.words(5),
-            category_3: 'Personal',
-            title_4: faker.word.words(3),
-            description_4: faker.word.words(5),
-            category_4: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
-        }
-        cy.visit(baseAppUrl)
-        cy.contains('button', '+ Add Note').click()
-        cy.get('[name="category"]').should('be.visible').select(note.category_1)  //verify if faker is working here       
-        cy.get('input[name="title"]').click().type(note.title_1)
-        cy.get('textarea[name="description"]').click().type(note.description_1)
-        cy.contains('button', 'Create').click()
-        cy.visit(baseAppUrl)
-        cy.contains('button', '+ Add Note').click()
-        cy.get('[name="category"]').should('be.visible').select(note.category_2)  //verify if faker is working here       
-        cy.get('input[name="title"]').click().type(note.title_2)
-        cy.get('textarea[name="description"]').click().type(note.description_2)
-        cy.contains('button', 'Create').click()
-        cy.visit(baseAppUrl)
-        cy.contains('button', '+ Add Note').click()
-        cy.get('[name="category"]').should('be.visible').select(note.category_3)  //verify if faker is working here       
-        cy.get('input[name="title"]').click().type(note.title_3)
-        cy.get('textarea[name="description"]').click().type(note.description_3)
-        cy.contains('button', 'Create').click()
-        cy.visit(baseAppUrl)
-        cy.contains('button', '+ Add Note').click()
-        cy.get('[name="category"]').should('be.visible').select(note.category_4)  //verify if faker is working here       
-        cy.get('[data-testid="note-completed"]').check() 
-        cy.get('input[name="title"]').click().type(note.title_4)
-        cy.get('textarea[name="description"]').click().type(note.description_4)
-        cy.contains('button', 'Create').click()
+        // const note = {            
+        //     title_1: faker.word.words(3),
+        //     description_1: faker.word.words(5),
+        //     category_1: 'Home', 
+        //     title_2: faker.word.words(3),
+        //     description_2: faker.word.words(5),
+        //     category_2: 'Work',
+        //     title_3: faker.word.words(3),
+        //     description_3: faker.word.words(5),
+        //     category_3: 'Personal',
+        //     title_4: faker.word.words(3),
+        //     description_4: faker.word.words(5),
+        //     category_4: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
+        // }         
+        
+        const noteArrayTitle = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]
+        const noteArrayDescription = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
+        const noteArrayCategory = ['Home', 'Work', 'Personal', faker.helpers.arrayElement(['Home', 'Work', 'Personal'])]           
+            
+        Cypress._.times(4, (k) => {
+            cy.visit(baseAppUrl)
+            cy.contains('button', '+ Add Note').click()
+            cy.get('input[name="title"]').click().type(noteArrayTitle[k])
+            cy.get('textarea[name="description"]').click().type(noteArrayDescription[k])
+            cy.get('[name="category"]').should('be.visible').select(noteArrayCategory[k])  
+            cy.contains('button', 'Create').click()
+        })
+        cy.get(':nth-child(2) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').check()
+        
+        //validate the completion of the note when creating later and remove obsolete code blocks here
+
+        // for ([var i = 1; i < 15; i++]) {
+
+        //     cy.get("[=buttonid=" + i + "]").click()
+        // }
+
+        // cy.visit(baseAppUrl)
+        // cy.contains('button', '+ Add Note').click()
+        // cy.get('[name="category"]').should('be.visible').select(note.category_1)  //verify if faker is working here       
+        // cy.get('input[name="title"]').click().type(note.title_1)
+        // cy.get('textarea[name="description"]').click().type(note.description_1)
+        // cy.contains('button', 'Create').click()
+        // cy.visit(baseAppUrl)
+        // cy.contains('button', '+ Add Note').click()
+        // cy.get('[name="category"]').should('be.visible').select(note.category_2)  //verify if faker is working here       
+        // cy.get('input[name="title"]').click().type(note.title_2)
+        // cy.get('textarea[name="description"]').click().type(note.description_2)
+        // cy.contains('button', 'Create').click()
+        // cy.visit(baseAppUrl)
+        // cy.contains('button', '+ Add Note').click()
+        // cy.get('[name="category"]').should('be.visible').select(note.category_3)  //verify if faker is working here       
+        // cy.get('input[name="title"]').click().type(note.title_3)
+        // cy.get('textarea[name="description"]').click().type(note.description_3)
+        // cy.contains('button', 'Create').click()
+        // cy.visit(baseAppUrl)
+        // cy.contains('button', '+ Add Note').click()
+        // cy.get('[name="category"]').should('be.visible').select(note.category_4)  //verify if faker is working here       
+        // cy.get('[data-testid="note-completed"]').check() 
+        // cy.get('input[name="title"]').click().type(note.title_4)
+        // cy.get('textarea[name="description"]').click().type(note.description_4)
+        // cy.contains('button', 'Create').click()
  
-        // create array to use in for()
-        cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_1).should('be.visible')
-        cy.get(':nth-child(4) > [data-testid="note-card"] > .card-body').contains(note.description_1).should('be.visible')
-        cy.get(':nth-child(4) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(255, 145, 0)')
+        // 0 1 2 3 = 2 3 4 5 = 3 2 1 4
 
-        cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_2).should('be.visible')
-        cy.get(':nth-child(3) > [data-testid="note-card"] > .card-body').contains(note.description_2).should('be.visible')
-        cy.get(':nth-child(3) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(92, 107, 192)')
+        // expect(text1).to.be.oneOf(textsArray)
 
-        cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_3).should('be.visible')
-        cy.get(':nth-child(2) > [data-testid="note-card"] > .card-body').contains(note.description_3).should('be.visible')
-        cy.get(':nth-child(2) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(50, 140, 160)')
+        // cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_3).should('be.visible')
+        // cy.get(':nth-child(2) > [data-testid="note-card"] > .card-body').contains(note.description_3).should('be.visible')
+        // cy.get(':nth-child(2) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
+        // cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(50, 140, 160)')
+        
+        // cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_2).should('be.visible')
+        // cy.get(':nth-child(3) > [data-testid="note-card"] > .card-body').contains(note.description_2).should('be.visible')
+        // cy.get(':nth-child(3) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
+        // cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(92, 107, 192)')
+        // // create array to use in for()
+        // cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_1).should('be.visible')
+        // cy.get(':nth-child(4) > [data-testid="note-card"] > .card-body').contains(note.description_1).should('be.visible')
+        // cy.get(':nth-child(4) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
+        // cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(255, 145, 0)')
 
-        cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_4).should('be.visible')        
-        cy.get(':nth-child(5) > [data-testid="note-card"] > .card-body').contains(note.description_4).should('be.visible')       
-        cy.get(':nth-child(5) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('be.checked')
-        cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgba(40, 46, 41, 0.6)')
+        // cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_4).should('be.visible')        
+        // cy.get(':nth-child(5) > [data-testid="note-card"] > .card-body').contains(note.description_4).should('be.visible')       
+        // cy.get(':nth-child(5) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('be.checked')
+        // cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgba(40, 46, 41, 0.6)')
 
         //need to use a for() here, using the index of the selectors as array members like array and index be like: array 0123 index 4325
 
-        cy.writeFile('cypress/fixtures/ui.json', {
-            "user_id": user.user_id,
-            "user_email": user.user_email,
-            "user_name": user.user_name,
-            "user_password": user.user_password,
-            "note_title_1": note.title_1,
-            "note_description_1": note.description_1,
-            "note_category_1": note.category_1,
-            "note_completed_1": note.completed_1,
-            "note_title_2": note.title_2,
-            "note_description_2": note.description_2,
-            "note_category_2": note.category_2,
-            "note_completed_2": note.completed_2,  
-            "note_title_3": note.title_3,
-            "note_description_3": note.description_3,
-            "note_category_3": note.category_3,
-            "note_completed_3": note.completed_3,  
-            "note_title_4": note.title_4,
-            "note_description_4": note.description_4,
-            "note_category_4": note.category_4,
-            "note_completed_4": note.completed_4                 
-        })         
+        // cy.writeFile('cypress/fixtures/ui.json', {
+        //     "user_id": user.user_id,
+        //     "user_email": user.user_email,
+        //     "user_name": user.user_name,
+        //     "user_password": user.user_password,
+        //     "note_title_1": note.title_1,
+        //     "note_description_1": note.description_1,
+        //     "note_category_1": note.category_1,
+        //     "note_completed_1": note.completed_1,
+        //     "note_title_2": note.title_2,
+        //     "note_description_2": note.description_2,
+        //     "note_category_2": note.category_2,
+        //     "note_completed_2": note.completed_2,  
+        //     "note_title_3": note.title_3,
+        //     "note_description_3": note.description_3,
+        //     "note_category_3": note.category_3,
+        //     "note_completed_3": note.completed_3,  
+        //     "note_title_4": note.title_4,
+        //     "note_description_4": note.description_4,
+        //     "note_category_4": note.category_4,
+        //     "note_completed_4": note.completed_4                 
+        // })         
     })
 })
 

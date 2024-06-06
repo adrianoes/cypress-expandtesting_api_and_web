@@ -8,7 +8,7 @@ describe('/notes_ui', () => {
         cy.visit(baseAppUrl)  
     });
 
-    it.only('Create a new note via UI', () => {
+    it('Create a new note via UI', () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()
         //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing
@@ -67,7 +67,7 @@ describe('/notes_ui', () => {
         cy.deleteUserViaUi()
     })
 
-    it('Get all notes via UI', () => {
+    it.only('Get all notes via UI', () => {
         //make a new one to delete it by id, maybe using note url
         cy.createUserViaUi()
         cy.logInUserViaUi()
