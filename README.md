@@ -56,6 +56,7 @@ Check then both to add both options in context menu.
 - [cypress-io/github-action](https://www.npmjs.com/package/@cypress/github-action#end-to-end-testing)
 - [Cypress: store value in a variable](https://stackoverflow.com/questions/69977821/cypress-store-value-in-a-variable)
 - [Working With Variables In Cypress Tests](https://www.stevenhicks.me/blog/2020/02/working-with-variables-in-cypress-tests/)
+- [How to Test an Application that Changes a CSS Variable](https://www.cypress.io/blog/2020/03/17/how-to-test-an-application-that-changes-css-variable)
 
 # Tips:
 
