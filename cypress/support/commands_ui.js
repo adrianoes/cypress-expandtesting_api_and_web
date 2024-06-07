@@ -114,93 +114,43 @@ Cypress.Commands.add('createNotesViaUi', ()=>{
             user_name: response.user_name,
             user_password: response.user_password
         }
-        // const note = {            
-        //     title_1: faker.word.words(3),
-        //     description_1: faker.word.words(5),
-        //     category_1: 'Home', 
-        //     title_2: faker.word.words(3),
-        //     description_2: faker.word.words(5),
-        //     category_2: 'Work',
-        //     title_3: faker.word.words(3),
-        //     description_3: faker.word.words(5),
-        //     category_3: 'Personal',
-        //     title_4: faker.word.words(3),
-        //     description_4: faker.word.words(5),
-        //     category_4: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
-        // }         
+       
         
-        const noteArrayTitle = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]
-        const noteArrayDescription = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
-        const noteArrayCategory = ['Home', 'Work', 'Personal', faker.helpers.arrayElement(['Home', 'Work', 'Personal'])]           
+        const arrayTitleCreation = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]// 2 3 4 5
+        const arrayDescriptionCreation = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
+        const arrayCategoryCreation = [faker.helpers.arrayElement(['Home', 'Work', 'Personal']), 'Home', 'Work', 'Personal', ]           
             
         Cypress._.times(4, (k) => {
             cy.visit(baseAppUrl)
             cy.contains('button', '+ Add Note').click()
-            cy.get('input[name="title"]').click().type(noteArrayTitle[k])
-            cy.get('textarea[name="description"]').click().type(noteArrayDescription[k])
-            cy.get('[name="category"]').should('be.visible').select(noteArrayCategory[k])  
+            cy.get('input[name="title"]').click().type(arrayTitleCreation[k])
+            cy.get('textarea[name="description"]').click().type(arrayDescriptionCreation[k])
+            cy.get('[name="category"]').should('be.visible').select(arrayCategoryCreation[k])  
             cy.contains('button', 'Create').click()
         })
-        cy.get(':nth-child(2) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').check()
+        cy.get(':nth-child(5) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').check()
         
-        //validate the completion of the note when creating later and remove obsolete code blocks here
 
-        // for ([var i = 1; i < 15; i++]) {
-
-        //     cy.get("[=buttonid=" + i + "]").click()
-        // }
-
-        // cy.visit(baseAppUrl)
-        // cy.contains('button', '+ Add Note').click()
-        // cy.get('[name="category"]').should('be.visible').select(note.category_1)  //verify if faker is working here       
-        // cy.get('input[name="title"]').click().type(note.title_1)
-        // cy.get('textarea[name="description"]').click().type(note.description_1)
-        // cy.contains('button', 'Create').click()
-        // cy.visit(baseAppUrl)
-        // cy.contains('button', '+ Add Note').click()
-        // cy.get('[name="category"]').should('be.visible').select(note.category_2)  //verify if faker is working here       
-        // cy.get('input[name="title"]').click().type(note.title_2)
-        // cy.get('textarea[name="description"]').click().type(note.description_2)
-        // cy.contains('button', 'Create').click()
-        // cy.visit(baseAppUrl)
-        // cy.contains('button', '+ Add Note').click()
-        // cy.get('[name="category"]').should('be.visible').select(note.category_3)  //verify if faker is working here       
-        // cy.get('input[name="title"]').click().type(note.title_3)
-        // cy.get('textarea[name="description"]').click().type(note.description_3)
-        // cy.contains('button', 'Create').click()
-        // cy.visit(baseAppUrl)
-        // cy.contains('button', '+ Add Note').click()
-        // cy.get('[name="category"]').should('be.visible').select(note.category_4)  //verify if faker is working here       
-        // cy.get('[data-testid="note-completed"]').check() 
-        // cy.get('input[name="title"]').click().type(note.title_4)
-        // cy.get('textarea[name="description"]').click().type(note.description_4)
-        // cy.contains('button', 'Create').click()
- 
-        // 0 1 2 3 = 2 3 4 5 = 3 2 1 4
-
-        // expect(text1).to.be.oneOf(textsArray)
-
-        // cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_3).should('be.visible')
-        // cy.get(':nth-child(2) > [data-testid="note-card"] > .card-body').contains(note.description_3).should('be.visible')
-        // cy.get(':nth-child(2) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        // cy.get(':nth-child(2) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(50, 140, 160)')
+        const arrayTitle = [arrayTitleCreation[3], arrayTitleCreation[2], arrayTitleCreation[1], arrayTitleCreation[0]]// 4-k = 3 2 1 0
+        const arrayDescription = [arrayDescriptionCreation[3], arrayDescriptionCreation[2], arrayDescriptionCreation[1], arrayDescriptionCreation[0]]
         
-        // cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_2).should('be.visible')
-        // cy.get(':nth-child(3) > [data-testid="note-card"] > .card-body').contains(note.description_2).should('be.visible')
-        // cy.get(':nth-child(3) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        // cy.get(':nth-child(3) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(92, 107, 192)')
-        // // create array to use in for()
-        // cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_1).should('be.visible')
-        // cy.get(':nth-child(4) > [data-testid="note-card"] > .card-body').contains(note.description_1).should('be.visible')
-        // cy.get(':nth-child(4) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('not.be.checked')
-        // cy.get(':nth-child(4) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgb(255, 145, 0)')
+        const arrayIndex = [2, 3, 4, 5]
 
-        // cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').contains(note.title_4).should('be.visible')        
-        // cy.get(':nth-child(5) > [data-testid="note-card"] > .card-body').contains(note.description_4).should('be.visible')       
-        // cy.get(':nth-child(5) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should('be.checked')
-        // cy.get(':nth-child(5) > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', 'rgba(40, 46, 41, 0.6)')
 
-        //need to use a for() here, using the index of the selectors as array members like array and index be like: array 0123 index 4325
+        const arrayCompleted = ['not.be.checked', 'not.be.checked', 'not.be.checked', 'be.checked'] 
+        const arrayColor = ['rgb(50, 140, 160)', 'rgb(92, 107, 192)', 'rgb(255, 145, 0)', 'rgba(40, 46, 41, 0.6)'] 
+
+        Cypress._.times(4, (k) => {
+            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.text', arrayTitle[k]).should('be.visible')
+            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-body > [data-testid="note-card-updated-at"]').invoke('text').as('note_updated')
+            cy.get('@note_updated').then((note_updated) => {
+                cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-body').should('have.text', arrayDescription[k]+note_updated).should('be.visible')
+            })
+            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should(arrayCompleted[k])
+            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', arrayColor[k])
+        })
+
+
 
         // cy.writeFile('cypress/fixtures/ui.json', {
         //     "user_id": user.user_id,
