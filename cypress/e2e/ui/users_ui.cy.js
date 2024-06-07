@@ -8,7 +8,7 @@ describe('/users_ui', () => {
         cy.visit(baseAppUrl)  
     });
 
-    it.only('Creates a new user account via UI', () => {
+    it('Creates a new user account via UI', () => {
         const user = {
             name: faker.internet.userName(),
             email: faker.internet.exampleEmail(),
@@ -31,7 +31,7 @@ describe('/users_ui', () => {
                 "user_email": user.email,
                 "user_name": user.name,
                 "user_password": user.password,
-                "user_id": response.body.data.id
+                "user_id": response.body.data.id// grab id user from nw response to use in api requests to speed some parts of ui tests
             })
         })
         cy.logInUserViaUi()
@@ -44,6 +44,7 @@ describe('/users_ui', () => {
         cy.createUserViaUi()
         cy.readFile('cypress/fixtures/ui.json').then(response => {
             const user = {
+                user_id: response.user_id,
                 user_email: response.user_email,
                 user_name: response.user_name,
                 user_password: response.user_password
@@ -52,17 +53,18 @@ describe('/users_ui', () => {
             cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
             cy.get('input[name="email"]').click().type(user.user_email)
             cy.get('input[name="password"]').click().type(user.user_password)
+            cy.intercept('/notes/api/users/login').as('loginFormAndToken')
             cy.contains('button', 'Login').click()
             cy.get('input[placeholder="Search notes..."]').should('be.visible')
-            cy.visit(baseAppUrl + 'profile')
-            //invoke 'text' to invoke text or 'val' to invoke value
-            cy.get('input[name="userId"]').invoke('val').as('user_id')
-            cy.get('@user_id').then((user_id) => {
-              cy.writeFile('cypress/fixtures/ui.json', {
-                "user_id": user_id,
-                "user_email": user.user_email,
-                "user_name": user.user_name,
-                "user_password": user.user_password               
+            cy.wait('@loginFormAndToken').then(({response}) => {
+                expect(response.statusCode).to.eq(200)
+                expect(response.body.message).to.eq('Login successful')
+                cy.writeFile('cypress/fixtures/ui.json', {
+                    "user_id": user.user_id,
+                    "user_email": user.user_email,
+                    "user_name": user.user_name,
+                    "user_password": user.user_password,
+                    "user_token": response.body.data.token
                 })
             })
         })
@@ -125,3 +127,5 @@ describe('/users_ui', () => {
     })
 })
 
+
+// make a pattern for the names that are being read/written

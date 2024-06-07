@@ -67,7 +67,7 @@ describe('/notes_ui', () => {
         cy.deleteUserViaUi()
     })
 
-    it.only('Get all notes via UI', () => {
+    it('Get all notes via UI', () => {
         //make a new one to delete it by id, maybe using note url
         cy.createUserViaUi()
         cy.logInUserViaUi()
