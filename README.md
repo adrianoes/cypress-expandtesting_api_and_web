@@ -59,6 +59,7 @@ Check then both to add both options in context menu.
 - [How to Test an Application that Changes a CSS Variable](https://www.cypress.io/blog/2020/03/17/how-to-test-an-application-that-changes-css-variable)
 - [A Practical Guide to Intercepting Network Requests in Cypress](https://egghead.io/blog/intercepting-network-requests-in-cypress)
 - [Cypress IO- Writing a For Loop [closed]](https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop)
+- [Learn Cypress.io the Hard Way: Case-Insensitive](https://iterable.com/blog/learn-cypress-io-the-hard-way-case-insensitive/)
 
 # Tips:
 

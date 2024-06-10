@@ -10,8 +10,9 @@ describe('/users_ui', () => {
 
     it('Creates a new user account via UI', () => {
         const user = {
-            name: faker.internet.userName(),
-            email: faker.internet.exampleEmail(),
+            name: faker.person.fullName(), 
+            //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
+            email: faker.internet.exampleEmail().toLowerCase(),
             password: faker.internet.password({ length: 8 })
         }
         cy.get('[href="/notes/app/register"]').contains('Create an account').should('be.visible').click()
@@ -27,11 +28,11 @@ describe('/users_ui', () => {
         cy.wait('@loginForm').then(({response}) => {
             expect(response.statusCode).to.eq(201)
             expect(response.body.message).to.eq('User account created successfully')
-            cy.writeFile('cypress/fixtures/ui.json', {
-                "user_email": user.email,
-                "user_name": user.name,
-                "user_password": user.password,
-                "user_id": response.body.data.id// grab id user from nw response to use in api requests to speed some parts of ui tests
+            cy.writeFile('cypress/fixtures/api.json', {
+                "user_id": response.body.data.id,
+                "user_name": response.body.data.name,
+                "user_email": response.body.data.email,
+                "user_password": user.password
             })
         })
         cy.logInUserViaUi()
@@ -128,4 +129,79 @@ describe('/users_ui', () => {
 })
 
 
-// make a pattern for the names that are being read/written
+// create user should carry: 
+// email
+// password
+// name
+// and check:
+// email
+// name
+// status code
+// message
+// and write:
+// email
+// password
+// name
+// user_id
+
+// login user should carry:
+// email
+// password
+// and read:
+// email
+// password
+// name
+// user_id
+// and check:
+// email
+// name
+// user_id
+// status code
+// message
+// and write:
+// email
+// password
+// name
+// user_id
+// token
+
+// delete user should carry:
+// token
+// and read:
+// token
+// and check:
+// status code
+// message
+
+// create a note should Carry:
+// title
+// description
+// category
+// user_token
+// and read:
+// user_id
+// token
+// and check:
+// title
+// description
+// category
+// user_id
+// status code
+// message
+// and write:
+// title
+// description
+// category
+// user_id
+// note_id
+// token
+
+// delete note should carry:
+// token
+// note_id
+// and read:
+// token
+// note_id
+// and check:
+// status code
+// message

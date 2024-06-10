@@ -40,8 +40,9 @@ Cypress.Commands.add('deleteUserViaUi', () =>{
 
 Cypress.Commands.add('createUserViaUi', ()=>{
     const user = {
-        name: faker.internet.userName(),
-        email: faker.internet.exampleEmail(),
+        name: faker.person.fullName(), 
+        //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
+        email: faker.internet.exampleEmail().toLowerCase(),
         password: faker.internet.password({ length: 8 })
     }
     cy.get('[href="/notes/app/register"]').contains('Create an account').should('be.visible').click()

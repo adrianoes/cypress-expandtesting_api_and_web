@@ -138,3 +138,79 @@ describe('/notes_ui', () => {
     })
 })
 
+// create user should carry: 
+// email
+// password
+// name
+// and check:
+// email
+// name
+// status code
+// message
+// and write:
+// email
+// password
+// name
+// user_id
+
+// login user should carry:
+// email
+// password
+// and read:
+// email
+// password
+// name
+// user_id
+// and check:
+// email
+// name
+// user_id
+// status code
+// message
+// and write:
+// email
+// password
+// name
+// user_id
+// token
+
+// delete user should carry:
+// token
+// and read:
+// token
+// and check:
+// status code
+// message
+
+// create a note should Carry:
+// title
+// description
+// category
+// user_token
+// and read:
+// user_id
+// token
+// and check:
+// title
+// description
+// category
+// user_id
+// status code
+// message
+// and write:
+// title
+// description
+// category
+// user_id
+// note_id
+// token
+
+// delete note should carry:
+// token
+// note_id
+// and read:
+// token
+// note_id
+// and check:
+// status code
+// message
