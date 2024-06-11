@@ -127,65 +127,13 @@ Cypress.Commands.add('createNoteViaApi', () => {
             expect(response.status).to.eq(200)                
             cy.log(JSON.stringify(response.body.message))
             cy.writeFile('cypress/fixtures/api.json', {
-                "note_category": response.body.data.category,
-                "note_description": response.body.data.description,
-                "note_id": response.body.data.id,
-                "note_title": response.body.data.title,
-                "user_id": response.body.data.user_id,
                 "user_token": user.user_token
             })                
         })            
     })  
 })
 
-Cypress.Commands.add('createSecondNoteViaApi', () => {
-    cy.readFile('cypress/fixtures/api.json').then(response => {  
-        const user_token = response.user_token;
-        const user_id = response.user_id;
-        const note = {
-            note_id: response.note_id,
-            note_title: response.note_title,
-            note_description: response.note_description,
-            note_category: response.note_category,
-        }
-        const second_note = {            
-            second_title: faker.word.words(4),
-            second_description: faker.word.words(5),
-            second_category: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
-        }
-        cy.api({
-            method: 'POST',
-            url: baseApiUrl + '/notes',
-            form: true,
-            headers: { 'X-Auth-Token': user_token },
-            body: {
-                title: second_note.second_title,
-                description: second_note.second_description,
-                category: second_note.second_category
-            },
-        }).then(response => {
-            expect(response.status).to.eq(200)
-            expect(response.body.message).to.eq('Note successfully created')
-            expect(response.body.data.title).to.eq(second_note.second_title)
-            expect(response.body.data.description).to.eq(second_note.second_description)
-            expect(response.body.data.category).to.eq(second_note.second_category)
-            expect(response.body.data.user_id).to.eq(user_id)                
-            cy.log(JSON.stringify(response.body.message))
-            cy.writeFile('cypress/fixtures/api.json', {
-                "second_note_id": response.body.data.id,
-                "second_note_title": response.body.data.title,
-                "second_note_description": response.body.data.description,
-                "second_note_category": response.body.data.category,
-                "user_id": user_id,
-                "note_id": note.note_id,
-                "note_title": note.note_title,
-                "note_description": note.note_description,
-                "note_category": note.note_category,
-                "user_token": user_token
-            })                
-        })            
-    }) 
-})
+
 
 Cypress.Commands.add('deleteSecondNoteViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {

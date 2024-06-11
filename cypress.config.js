@@ -14,6 +14,6 @@ module.exports = defineConfig({
   },
   env: {
     baseApiUrl:"https://practice.expandtesting.com/notes/api",
-    baseAppUrl: 'https://practice.expandtesting.com/notes/app/'
+    baseAppUrl: "https://practice.expandtesting.com/notes/app"
   }
 });

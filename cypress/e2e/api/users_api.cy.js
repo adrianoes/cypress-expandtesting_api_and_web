@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 describe('/users_api', () => {
 
-    const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+    const baseApiUrl = Cypress.env('baseApiUrl')
 
     afterEach(function () {  
         cy.writeFile('cypress/fixtures/api.json', '')

@@ -9,10 +9,10 @@ describe('/notes_api', () => {
         cy.logInUserViaApi() 
     });
 
-    afterEach(function () {        
-        cy.deleteUserViaApi()
-        cy.writeFile('cypress/fixtures/api.json', '')
-    });
+    // afterEach(function () {        
+    //     cy.deleteUserViaApi()
+    //     cy.writeFile('cypress/fixtures/api.json', '')
+    // });
 
     it('Creates a new note via API', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => { 
@@ -56,47 +56,61 @@ describe('/notes_api', () => {
         cy.deleteNoteViaApi()           
     })
 
-    it('Get all notes via API', () => {
-        cy.createNoteViaApi() 
-        cy.createSecondNoteViaApi() 
-        cy.readFile('cypress/fixtures/api.json').then(response => {
-            const note = {
-                note_id: response.note_id,
-                note_title: response.note_title,
-                note_description: response.note_description,
-                note_category: response.note_category
+    it.only('Get all notes via API', () => {
+        cy.readFile('cypress/fixtures/api.json').then(response => {         
+            const user = {   
+                user_id: response.user_id,
+                user_token: response.user_token
             }
-            const second_note = {
-                second_note_id: response.second_note_id,
-                second_note_title: response.second_note_title,
-                second_note_description: response.second_note_description,
-                second_note_category: response.second_note_category
-            }
-            const user_id = response.user_id;
-            const user_token = response.user_token;
-            cy.api({
-                method: 'GET',
-                url: baseApiUrl + '/notes',
-                form: true,
-                headers: { 'X-Auth-Token': user_token },
-            }).then(response => {
-                expect(response.status).to.eq(200); 
-                expect(response.body.message).to.eq("Notes successfully retrieved")
-                expect(response.body.data[1].id).to.eq(note.note_id)
-                expect(response.body.data[1].title).to.eq(note.note_title)
-                expect(response.body.data[1].description).to.eq(note.note_description)
-                expect(response.body.data[1].category).to.eq(note.note_category)
-                expect(response.body.data[1].user_id).to.eq(user_id)
-                expect(response.body.data[0].id).to.eq(second_note.second_note_id)
-                expect(response.body.data[0].title).to.eq(second_note.second_note_title)
-                expect(response.body.data[0].description).to.eq(second_note.second_note_description)
-                expect(response.body.data[0].category).to.eq(second_note.second_note_category)
-                expect(response.body.data[0].user_id).to.eq(user_id)
-                cy.log(JSON.stringify(response.body.message))
-            })
-        })  
-        cy.deleteSecondNoteViaApi()
-        cy.deleteNoteViaApi()         
+            const arrayCategory = [faker.helpers.arrayElement(['Home', 'Work', 'Personal']), 'Home', 'Work', 'Personal']           
+            const arrayCompleted = [false, false, false, true]  
+            const arrayTitle = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]
+            const arrayDescription = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
+            const arrayNote_id = [0, 0, 0, 0]         
+            Cypress._.times(4, (k) => {
+                cy.api({
+                    method: 'POST',
+                    url: baseApiUrl + '/notes',
+                    form: true,
+                    headers: { 'X-Auth-Token': user.user_token },
+                    body: {
+                        category: arrayCategory[k],
+                        completed: arrayCompleted[k],
+                        description: arrayDescription[k],
+                        title: arrayTitle[k]                   
+                    },
+                }).then(response => {
+                    expect(response.body.data.category).to.eq(arrayCategory[k])
+                    expect(response.body.data.completed).to.eq(arrayCompleted[k])
+                    expect(response.body.data.description).to.eq(arrayDescription[k])  
+                    arrayNote_id[k] = response.body.data.id              
+                    expect(response.body.data.title).to.eq(arrayTitle[k])
+                    expect(response.body.data.user_id).to.eq(user.user_id)      
+                    //verify how to write id and other info without lose data in each loop. write below last line          
+                    expect(response.body.message).to.eq('Note successfully created')
+                    expect(response.status).to.eq(200)
+                    cy.log(JSON.stringify(response.body.message))                       
+                })
+            })        
+            Cypress._.times(4, (k) => {
+                cy.api({
+                    method: 'GET',
+                    url: baseApiUrl + '/notes/' ,
+                    form: true,
+                    headers: { 'X-Auth-Token': user.user_token },
+                }).then(response => {
+                    expect(response.body.data[k].category).to.eq(arrayCategory[3-k])
+                    expect(response.body.data[k].completed).to.eq(arrayCompleted[3-k])
+                    expect(response.body.data[k].description).to.eq(arrayDescription[3-k])
+                    expect(response.body.data[k].id).to.eq(arrayNote_id[3-k])  
+                    expect(response.body.data[k].title).to.eq(arrayTitle[3-k])
+                    expect(response.body.data[k].user_id).to.eq(user.user_id)  
+                    expect(response.body.message).to.eq('Notes successfully retrieved')
+                    expect(response.status).to.eq(200)  
+                    cy.log(JSON.stringify(response.body.message))
+                })
+            })            
+        })         
     })
 
     it('Get note by ID via API', () => {

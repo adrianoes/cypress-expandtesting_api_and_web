@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-const baseAppUrl = `${Cypress.env('baseAppUrl')}`
+const baseAppUrl = Cypress.env('baseAppUrl')
 
 Cypress.Commands.add('logInUserViaUi', () => {
     cy.readFile('cypress/fixtures/ui.json').then(response => {
@@ -111,76 +111,6 @@ Cypress.Commands.add('createNoteViaUi', ()=>{
             "note_description": note.description,
             "note_category": note.category,
             "note_completed": note.completed               
-        })         
-    })
-})
-
-Cypress.Commands.add('createNotesViaUi', ()=>{
-    cy.readFile('cypress/fixtures/ui.json').then(response => {
-        const user = {   
-            user_id: response.user_id,             
-            user_email: response.user_email,
-            user_name: response.user_name,
-            user_password: response.user_password
-        }
-       
-        
-        const arrayTitle = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]// 2 3 4 5
-        const arrayDescription = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
-        const arrayCategory = [faker.helpers.arrayElement(['Home', 'Work', 'Personal']), 'Home', 'Work', 'Personal', ]           
-            
-        Cypress._.times(4, (k) => {
-            cy.visit(baseAppUrl)
-            cy.contains('button', '+ Add Note').click()
-            cy.get('input[name="title"]').click().type(arrayTitle[k])
-            cy.get('textarea[name="description"]').click().type(arrayDescription[k])
-            cy.get('[name="category"]').should('be.visible').select(arrayCategory[k])  
-            cy.contains('button', 'Create').click()
-        })
-        cy.get(':nth-child(5) > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').check()
-        
-
-
-        const arrayIndex = [2, 3, 4, 5]
-
-
-        const arrayCompleted = ['not.be.checked', 'not.be.checked', 'not.be.checked', 'be.checked'] 
-        const arrayColor = ['rgb(50, 140, 160)', 'rgb(92, 107, 192)', 'rgb(255, 145, 0)', 'rgba(40, 46, 41, 0.6)'] 
-
-        Cypress._.times(4, (k) => {
-            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.text', arrayTitle[3-k]).should('be.visible')
-            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-body > [data-testid="note-card-updated-at"]').invoke('text').as('note_updated')
-            cy.get('@note_updated').then((note_updated) => {
-                cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-body').should('have.text', arrayDescription[3-k]+note_updated).should('be.visible')
-            })
-            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should(arrayCompleted[k])
-            cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', arrayColor[k])
-        })
-
-        //only note information that needs to be written is the note id so we can use it for api commands to speed up test, 
-        //and even so we can delete the user instead to speed even more, lets see...
-
-        cy.writeFile('cypress/fixtures/ui.json', {
-            "user_id": user.user_id,
-            "user_email": user.user_email,
-            "user_name": user.user_name,
-            "user_password": user.user_password,
-            "note_title_1": arrayTitle[0],
-            "note_description_1": arrayDescription[0],
-            "note_category_1": arrayCategory[0],
-            "note_completed_1": arrayCompleted[3],
-            "note_title_2": arrayTitle[1],
-            "note_description_2": arrayDescription[1],
-            "note_category_2": arrayCategory[1],
-            "note_completed_2": arrayCompleted[2],  
-            "note_title_3": arrayTitle[2],
-            "note_description_3": arrayDescription[2],
-            "note_category_3": arrayCategory[2],
-            "note_completed_3": arrayCompleted[1],  
-            "note_title_4": arrayTitle[3],
-            "note_description_4": arrayDescription[3],
-            "note_category_4": arrayCategory[3],
-            "note_completed_4": arrayCompleted[0]                 
         })         
     })
 })

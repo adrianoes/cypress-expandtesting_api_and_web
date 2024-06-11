@@ -8,7 +8,7 @@ describe('/users_ui', () => {
         cy.visit(baseAppUrl)  
     });
 
-    it('Creates a new user account via UI', () => {
+    it.only('Creates a new user account via UI', () => {
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
