@@ -30,9 +30,9 @@ describe('/users_api', () => {
             expect(response.status).to.eq(201)                
             cy.log(JSON.stringify(response.body.message))
             cy.writeFile('cypress/fixtures/api.json', {
-                "user_email": response.body.data.email,
+                "user_email": user.user_email,
                 "user_id": response.body.data.id,
-                "user_name": response.body.data.name,                
+                "user_name": user.user_name,                
                 "user_password": user.user_password
             })
         })
@@ -179,7 +179,8 @@ describe('/users_api', () => {
             cy.api({
                 method: 'DELETE',
                 url: baseApiUrl + '/users/logout',
-                form: true, //sets to application/x-www-form-urlencoded
+                //sets to application/x-www-form-urlencoded
+                form: true, 
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
                 expect(response.body.message).to.eq("User has been successfully logged out")
@@ -187,6 +188,7 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         })  
+        //When login out, token becomes invalid, so there is the need to log in again to delete the user
         cy.logInUserViaApi()
         cy.deleteUserViaApi()      
     })
@@ -199,7 +201,7 @@ describe('/users_api', () => {
             cy.api({
                 method: 'DELETE',
                 url: baseApiUrl + '/users/delete-account',
-                form: true, //sets to application/x-www-form-urlencoded
+                form: true, 
                 headers: { 'X-Auth-Token': user_token },
             }).then(response => {
                 expect(response.body.message).to.eq("Account successfully deleted")
@@ -210,82 +212,4 @@ describe('/users_api', () => {
     })
 })
 
-
-
-// create user should carry: 
-// email
-// password
-// name
-// and check:
-// email
-// name
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-
-// login user should carry:
-// email
-// password
-// and read:
-// email
-// password
-// name
-// user_id
-// and check:
-// email
-// name
-// user_id
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-// token
-
-// delete user should carry:
-// token
-// and read:
-// token
-// and check:
-// status code
-// message
-
-// create a note should Carry:
-// title
-// description
-// category
-// user_token
-// and read:
-// user_id
-// token
-// and check:
-// title
-// description
-// category
-// user_id
-// status code
-// message
-// and write:
-// title
-// description
-// category
-// user_id
-// note_id
-// token
-
-// delete note should carry:
-// token
-// note_id
-// and read:
-// token
-// note_id
-// and check:
-// status code
-// message
 

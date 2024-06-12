@@ -2,17 +2,17 @@ import { faker } from '@faker-js/faker'
 
 describe('/notes_api', () => {
 
-    const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+    const baseApiUrl = Cypress.env('baseApiUrl')
 
     beforeEach(function () {
         cy.createUserViaApi()
         cy.logInUserViaApi() 
     });
 
-    // afterEach(function () {        
-    //     cy.deleteUserViaApi()
-    //     cy.writeFile('cypress/fixtures/api.json', '')
-    // });
+    afterEach(function () {        
+        cy.deleteUserViaApi()
+        cy.writeFile('cypress/fixtures/api.json', '')
+    });
 
     it('Creates a new note via API', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => { 
@@ -56,7 +56,7 @@ describe('/notes_api', () => {
         cy.deleteNoteViaApi()           
     })
 
-    it.only('Get all notes via API', () => {
+    it('Get all notes via API', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {         
             const user = {   
                 user_id: response.user_id,
@@ -85,8 +85,7 @@ describe('/notes_api', () => {
                     expect(response.body.data.description).to.eq(arrayDescription[k])  
                     arrayNote_id[k] = response.body.data.id              
                     expect(response.body.data.title).to.eq(arrayTitle[k])
-                    expect(response.body.data.user_id).to.eq(user.user_id)      
-                    //verify how to write id and other info without lose data in each loop. write below last line          
+                    expect(response.body.data.user_id).to.eq(user.user_id)               
                     expect(response.body.message).to.eq('Note successfully created')
                     expect(response.status).to.eq(200)
                     cy.log(JSON.stringify(response.body.message))                       
@@ -209,7 +208,7 @@ describe('/notes_api', () => {
                 url: baseApiUrl + '/notes/' + note.note_id,
                 form: true,
                 headers: { 'X-Auth-Token': user.user_token },
-                //here, it must have the completed status hardcoded to be sure that it is updated
+                //Here, it must have the completed status hardcoded to be sure that it is updated. A way to input the oposite of the faked value should be considered in the future.
                 body: {
                     completed: false
                 },
@@ -245,80 +244,3 @@ describe('/notes_api', () => {
         })             
     })
 })
-
-// create user should carry: 
-// email
-// password
-// name
-// and check:
-// email
-// name
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-
-// login user should carry:
-// email
-// password
-// and read:
-// email
-// password
-// name
-// user_id
-// and check:
-// email
-// name
-// user_id
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-// token
-
-// delete user should carry:
-// token
-// and read:
-// token
-// and check:
-// status code
-// message
-
-// create a note should Carry:
-// title
-// description
-// category
-// user_token
-// and read:
-// user_id
-// token
-// and check:
-// title
-// description
-// category
-// user_id
-// status code
-// message
-// and write:
-// title
-// description
-// category
-// user_id
-// note_id
-// token
-
-// delete note should carry:
-// token
-// note_id
-// and read:
-// token
-// note_id
-// and check:
-// status code
-// message

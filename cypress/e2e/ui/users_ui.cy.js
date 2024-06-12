@@ -2,13 +2,16 @@ import { faker } from '@faker-js/faker'
 
 describe('/users_ui', () => {
 
-    const baseAppUrl = `${Cypress.env('baseAppUrl')}`
+    const baseAppUrl = Cypress.env('baseAppUrl')
     
     beforeEach(function () {
-        cy.visit(baseAppUrl)  
+        cy.visit(baseAppUrl)
+    });
+    afterEach(function () {  
+        cy.writeFile('cypress/fixtures/ui.json', '')
     });
 
-    it.only('Creates a new user account via UI', () => {
+    it('Creates a new user account via UI', () => {
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -20,7 +23,6 @@ describe('/users_ui', () => {
         cy.get('input[name="name"]').click().type(user.name)
         cy.get('input[name="password"]').click().type(user.password)
         cy.get('input[name="confirmPassword"]').click().type(user.password)
-        //miss organize code blocks, code hooks an api commands
         cy.intercept('/notes/api/users/register').as('loginForm')
         cy.contains('button', 'Register').click()
         cy.contains('b', 'User account created successfully').should('be.visible')
@@ -28,18 +30,16 @@ describe('/users_ui', () => {
         cy.wait('@loginForm').then(({response}) => {
             expect(response.statusCode).to.eq(201)
             expect(response.body.message).to.eq('User account created successfully')
-            cy.writeFile('cypress/fixtures/api.json', {
-                "user_id": response.body.data.id,
-                "user_name": response.body.data.name,
-                "user_email": response.body.data.email,
-                "user_password": user.password
+            cy.writeFile('cypress/fixtures/ui.json', {
+                "user_email": user.email,
+                "user_name": user.name,
+                "user_password": user.password,
+                "user_id": response.body.data.id
             })
         })
         cy.logInUserViaUi()
         cy.deleteUserViaUi()
     })
-
-
 
     it('Log in as an existing user via UI', () => {
         cy.createUserViaUi()
@@ -50,10 +50,11 @@ describe('/users_ui', () => {
                 user_name: response.user_name,
                 user_password: response.user_password
             }        
-            cy.visit(baseAppUrl + 'login')
+            cy.visit(baseAppUrl + '/login')
             cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
             cy.get('input[name="email"]').click().type(user.user_email)
             cy.get('input[name="password"]').click().type(user.user_password)
+            //API validation can be done using intercept(). I'm not sure if it is needed here.
             cy.intercept('/notes/api/users/login').as('loginFormAndToken')
             cy.contains('button', 'Login').click()
             cy.get('input[placeholder="Search notes..."]').should('be.visible')
@@ -74,7 +75,8 @@ describe('/users_ui', () => {
 
     it('Retrieve user profile information via UI', () => {
         cy.createUserViaUi()
-        cy.logInUserViaUi()        
+        cy.logInUserViaUi() 
+        //Input the remaining validation code block here       
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.deleteUserViaUi()       
     })
@@ -121,87 +123,9 @@ describe('/users_ui', () => {
     it('Delete user account via UI', () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()
-        cy.visit(baseAppUrl + 'profile')
+        cy.visit(baseAppUrl + '/profile')
         cy.contains('button', 'Delete Account').click()
         cy.get('[data-testid="note-delete-confirm"]').click()
         cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
     })
 })
-
-
-// create user should carry: 
-// email
-// password
-// name
-// and check:
-// email
-// name
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-
-// login user should carry:
-// email
-// password
-// and read:
-// email
-// password
-// name
-// user_id
-// and check:
-// email
-// name
-// user_id
-// status code
-// message
-// and write:
-// email
-// password
-// name
-// user_id
-// token
-
-// delete user should carry:
-// token
-// and read:
-// token
-// and check:
-// status code
-// message
-
-// create a note should Carry:
-// title
-// description
-// category
-// user_token
-// and read:
-// user_id
-// token
-// and check:
-// title
-// description
-// category
-// user_id
-// status code
-// message
-// and write:
-// title
-// description
-// category
-// user_id
-// note_id
-// token
-
-// delete note should carry:
-// token
-// note_id
-// and read:
-// token
-// note_id
-// and check:
-// status code
-// message

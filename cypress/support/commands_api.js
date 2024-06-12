@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-const baseApiUrl = `${Cypress.env('baseApiUrl')}`
+const baseApiUrl = Cypress.env('baseApiUrl')
 
 Cypress.Commands.add('logInUserViaApi', () => {
     cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -41,19 +41,17 @@ Cypress.Commands.add('deleteUserViaApi', () => {
         cy.api({
             method: 'DELETE',
             url: baseApiUrl + '/users/delete-account',
-            form: true, //sets to application/x-www-form-urlencoded
+            form: true, 
             headers: { 'X-Auth-Token': user_token },
         }).then(response => {
             expect(response.body.message).to.eq("Account successfully deleted")
-            expect(response.status).to.eq(200)
-            
+            expect(response.status).to.eq(200)            
         })
     })
 })
 
 Cypress.Commands.add('createUserViaApi', () => {
     const user = {            
-        //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
         user_email: faker.internet.exampleEmail().toLowerCase(),
         user_name: faker.person.fullName(), 
         user_password: faker.internet.password({ length: 8 })
@@ -88,7 +86,7 @@ Cypress.Commands.add('deleteNoteViaApi', () => {
         cy.api({
             method: 'DELETE',
             url: baseApiUrl + '/notes/' + note_id,
-            form: true, //sets to application/x-www-form-urlencoded
+            form: true, 
             headers: { 'X-Auth-Token': user_token },
         }).then(response => {
             expect(response.status).to.eq(200); 
@@ -127,29 +125,18 @@ Cypress.Commands.add('createNoteViaApi', () => {
             expect(response.status).to.eq(200)                
             cy.log(JSON.stringify(response.body.message))
             cy.writeFile('cypress/fixtures/api.json', {
+                "note_category": response.body.data.category,
+                "note_description": response.body.data.description,
+                "note_id": response.body.data.id,
+                "note_title": response.body.data.title,
+                "user_id": user.user_id,
                 "user_token": user.user_token
             })                
         })            
-    })  
+    })        
 })
 
 
-
-Cypress.Commands.add('deleteSecondNoteViaApi', () => {
-    cy.readFile('cypress/fixtures/api.json').then(response => {
-        const second_note_id = response.second_note_id;
-        const user_token = response.user_token;
-        cy.api({
-            method: 'DELETE',
-            url: baseApiUrl + '/notes/' + second_note_id,
-            form: true, //sets to application/x-www-form-urlencoded
-            headers: { 'X-Auth-Token': user_token },
-        }).then(response => {
-            expect(response.status).to.eq(200); 
-            expect(response.body.message).to.eq("Note successfully deleted")
-        })
-    })
-})
 
 
 

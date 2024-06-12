@@ -10,7 +10,7 @@ Cypress.Commands.add('logInUserViaUi', () => {
             user_name: response.user_name,
             user_password: response.user_password
         }        
-        cy.visit(baseAppUrl + 'login')
+        cy.visit(baseAppUrl + '/login')
         cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
         cy.get('input[name="email"]').click().type(user.user_email)
         cy.get('input[name="password"]').click().type(user.user_password)
@@ -32,7 +32,7 @@ Cypress.Commands.add('logInUserViaUi', () => {
 })
 
 Cypress.Commands.add('deleteUserViaUi', () =>{
-    cy.visit(baseAppUrl + 'profile')
+    cy.visit(baseAppUrl + '/profile')
     cy.contains('button', 'Delete Account').click()
     cy.get('[data-testid="note-delete-confirm"]').click()
     cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
@@ -50,7 +50,6 @@ Cypress.Commands.add('createUserViaUi', ()=>{
     cy.get('input[name="name"]').click().type(user.name)
     cy.get('input[name="password"]').click().type(user.password)
     cy.get('input[name="confirmPassword"]').click().type(user.password)
-    //miss organize code blocks, code hooks an api commands
     cy.intercept('/notes/api/users/register').as('loginForm')
     cy.contains('button', 'Register').click()
     cy.contains('b', 'User account created successfully').should('be.visible')
@@ -58,11 +57,12 @@ Cypress.Commands.add('createUserViaUi', ()=>{
     cy.wait('@loginForm').then(({response}) => {
         expect(response.statusCode).to.eq(201)
         expect(response.body.message).to.eq('User account created successfully')
+        // Grab id user from nw response to use in api requests to speed some parts of ui tests.
         cy.writeFile('cypress/fixtures/ui.json', {
             "user_email": user.email,
             "user_name": user.name,
             "user_password": user.password,
-            "user_id": response.body.data.id// grab id user from nw response to use in api requests to speed some parts of ui tests
+            "user_id": response.body.data.id
         })
     })
 })
@@ -114,15 +114,3 @@ Cypress.Commands.add('createNoteViaUi', ()=>{
         })         
     })
 })
-
-Cypress.Commands.add('deleteNotesViaUi', () =>{
-    Cypress._.times(4, (k) => {
-        const arrayIndex = [5, 4, 3, 2]//reverse order so we will have all frames in the screen until end of test
-        cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-footer > div > [data-testid="note-delete"]').click()        
-        cy.get('[data-testid="note-delete-confirm"]').contains('Delete').click()
-    })   
-})
-
-
-
-//check what needs to be read/written in order to improve speed in api custom commands for ui tests
