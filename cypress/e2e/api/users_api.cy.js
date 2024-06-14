@@ -40,6 +40,29 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
+    it('Creates a new user account via API - Bad request', () => {
+        const user = {            
+            //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
+            user_email: faker.internet.exampleEmail().toLowerCase(),
+            user_name: faker.person.fullName(), 
+            user_password: faker.internet.password({ length: 8 })
+        }
+        cy.api({
+            method: 'POST',
+            url: baseApiUrl + '/users/register',
+            body: {
+                name: user.user_name,
+                email: '@'+user.user_email,
+                password: user.user_password
+            },
+            failOnStatusCode: false,
+        }).then(response => {
+            expect(response.body.message).to.eq("A valid email address is required")
+            expect(response.status).to.eq(400)                
+            cy.log(JSON.stringify(response.body.message))
+        })      
+    })
+
     it('Log in as an existing user via API', () => {
         cy.createUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -75,6 +98,62 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
+    it('Log in as an existing user via API - Bad request', () => {
+        cy.createUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_email: response.user_email,
+                user_id: response.user_id,
+                user_name: response.user_name,
+                user_password: response.user_password,
+            }
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/users/login',
+                body: {
+                    email: '@'+user.user_email,
+                    password: user.user_password
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("A valid email address is required")
+                expect(response.status).to.eq(400)
+                cy.log(JSON.stringify(response.body.message))
+            })
+        }) 
+        //Login right so user can be deleted.
+        cy.logInUserViaApi() 
+        cy.deleteUserViaApi()        
+    })
+
+    it('Log in as an existing user via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_email: response.user_email,
+                user_id: response.user_id,
+                user_name: response.user_name,
+                user_password: response.user_password,
+            }
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/users/login',
+                body: {
+                    email: user.user_email,
+                    password: '@'+user.user_password
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Incorrect email address or password")
+                expect(response.status).to.eq(401)
+                cy.log(JSON.stringify(response.body.message))
+            })
+        }) 
+        //Login right so user can be deleted.
+        cy.logInUserViaApi() 
+        cy.deleteUserViaApi()        
+    })
+
     it('Retrieve user profile information via API', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -97,6 +176,32 @@ describe('/users_api', () => {
                 expect(response.body.data.name).to.eq(user.user_name)
                 expect(response.body.message).to.eq("Profile successful")
                 expect(response.status).to.eq(200) 
+                cy.log(JSON.stringify(response.body.message))               
+            })
+        })   
+        cy.deleteUserViaApi()      
+    })
+
+    it('Retrieve user profile information via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_email: response.user_email,
+                user_id: response.user_id,
+                user_name: response.user_name,
+                user_password: response.user_password,
+                user_token: response.user_token
+            }
+            cy.api({
+                method: 'GET',
+                url: baseApiUrl + '/users/profile',
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
                 cy.log(JSON.stringify(response.body.message))               
             })
         })   
@@ -143,6 +248,72 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
+    it('Update the user profile information via API - Bad Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => { 
+            const user = {
+                user_name: response.user_name,
+                user_token: response.user_token
+            }           
+            const updated_user = {  
+                updated_user_company: faker.internet.userName(),
+                updated_user_phone: faker.string.numeric({ length: 12 }),         
+                updated_user_name: faker.person.fullName()                
+            }
+            cy.api({
+                method: 'PATCH',
+                url: baseApiUrl + '/users/profile',
+                form: true,
+                headers: { 'X-Auth-Token': user.user_token },
+                body: {
+                    name: 6+'@'+'#',
+                    phone: updated_user.updated_user_phone,
+                    company: updated_user.updated_user_company
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq('User name must be between 4 and 30 characters')
+                expect(response.status).to.eq(400) 
+                cy.log(JSON.stringify(response.body.message))  
+            })
+        })
+        cy.deleteUserViaApi()      
+    })
+
+    it('Update the user profile information via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => { 
+            const user = {
+                user_name: response.user_name,
+                user_token: response.user_token
+            }           
+            const updated_user = {  
+                updated_user_company: faker.internet.userName(), 
+                updated_user_phone: faker.string.numeric({ length: 12 }),         
+                updated_user_name: faker.person.fullName()                
+            }
+            cy.api({
+                method: 'PATCH',
+                url: baseApiUrl + '/users/profile',
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                body: {
+                    name: updated_user.updated_user_name,
+                    phone: updated_user.updated_user_phone,
+                    company: updated_user.updated_user_company
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message))  
+            })
+        })
+        cy.deleteUserViaApi()        
+    })
+
     it('Change a user\'s password via API', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -171,6 +342,64 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
+    it('Change a user\'s password via API - Bad Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_password: response.user_password,
+                user_token: response.user_token
+            }  
+            const updated_password = faker.internet.password({ length: 8 })
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/users/change-password',
+                form: true,
+                headers: { 'X-Auth-Token': user.user_token },
+                body: {
+                    currentPassword: user.user_password,
+                    newPassword: '123'
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(user.user_password).to.not.eq(updated_password)  
+                expect(response.body.message).to.eq('New password must be between 6 and 30 characters')
+                expect(response.status).to.eq(400)
+                cy.log(JSON.stringify(response.body.message))
+            })
+        }) 
+        cy.deleteUserViaApi()        
+    })
+
+    it('Change a user\'s password via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_password: response.user_password,
+                user_token: response.user_token
+            }  
+            const updated_password = faker.internet.password({ length: 8 })
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/users/change-password',
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                body: {
+                    currentPassword: user.user_password,
+                    newPassword: updated_password
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(user.user_password).to.not.eq(updated_password)  
+                expect(response.body.message).to.eq('Access token is not valid or has expired, you will need to login')
+                expect(response.status).to.eq(401)
+                cy.log(JSON.stringify(response.body.message))
+            })
+        }) 
+        cy.deleteUserViaApi()        
+    })
+
     it('Log out a user via API', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -193,6 +422,30 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
+    it('Log out a user via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/users/logout',
+                //sets to application/x-www-form-urlencoded
+                form: true, 
+                headers: { 'X-Auth-Token': '@'+user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401); 
+                cy.log(JSON.stringify(response.body.message))
+            })
+        })  
+        //When login out, token becomes invalid, so there is the need to log in again to delete the user
+        //Login out was not executed so we can directly delete the user without the need to login again.
+        // cy.logInUserViaApi()
+        cy.deleteUserViaApi()      
+    })
+
     it('Delete user account via API', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -209,6 +462,27 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))             
             })
         })        
+    })
+
+    it('Delete user account via API - Unauthorized Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/users/delete-account',
+                form: true, 
+                headers: { 'X-Auth-Token': '@'+user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401); 
+                cy.log(JSON.stringify(response.body.message))             
+            })
+        }) 
+        //call deleteUserViaApi() to delete the user after verify the unauthorized condition above
+        cy.deleteUserViaApi()       
     })
 })
 
