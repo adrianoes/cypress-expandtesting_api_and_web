@@ -19,17 +19,22 @@ describe('/users_ui', () => {
             password: faker.internet.password({ length: 8 })
         }
         cy.get('[href="/notes/app/register"]').contains('Create an account').should('be.visible').click()
+        cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+        cy.get('.badge').should('have.text', 'Tip').should('be.visible')
         cy.get('input[name="email"]').click().type(user.email)
         cy.get('input[name="name"]').click().type(user.name)
         cy.get('input[name="password"]').click().type(user.password)
         cy.get('input[name="confirmPassword"]').click().type(user.password)
         cy.intercept('/notes/api/users/register').as('loginForm')
         cy.contains('button', 'Register').click()
+        cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
         cy.contains('b', 'User account created successfully').should('be.visible')
-        cy.get('[href="/notes/app/login"]').contains('Click here to Log In').should('be.visible').click() 
+        cy.get('[href="/notes/app/login"]').contains('Click here to Log In').should('be.visible').click()
+        cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+        cy.get('h1').should('have.text', 'Login').should('be.visible')
         cy.wait('@loginForm').then(({response}) => {
-            expect(response.statusCode).to.eq(201)
             expect(response.body.message).to.eq('User account created successfully')
+            expect(response.statusCode).to.eq(201)
             cy.writeFile('cypress/fixtures/ui.json', {
                 "user_email": user.email,
                 "user_name": user.name,
@@ -59,8 +64,12 @@ describe('/users_ui', () => {
             cy.contains('button', 'Login').click()
             cy.get('input[placeholder="Search notes..."]').should('be.visible')
             cy.wait('@loginFormAndToken').then(({response}) => {
-                expect(response.statusCode).to.eq(200)
+                cy.visit(baseAppUrl + '/profile')
+                cy.get('[data-testid="user-email"]').should('have.value', user.user_email).should('be.visible')
+                cy.get('[data-testid="user-id"]').should('have.value', user.user_id).should('be.visible')
+                cy.get('[data-testid="user-name"]').should('have.value', user.user_name).should('be.visible')
                 expect(response.body.message).to.eq('Login successful')
+                expect(response.statusCode).to.eq(200)
                 cy.writeFile('cypress/fixtures/ui.json', {
                     "user_id": user.user_id,
                     "user_email": user.user_email,
@@ -75,8 +84,7 @@ describe('/users_ui', () => {
 
     it('Retrieve user profile information via UI', () => {
         cy.createUserViaUi()
-        cy.logInUserViaUi() 
-        //Input the remaining validation code block here       
+        cy.logInUserViaUi()      
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.deleteUserViaUi()       
     })
@@ -129,3 +137,6 @@ describe('/users_ui', () => {
         cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
     })
 })
+
+
+

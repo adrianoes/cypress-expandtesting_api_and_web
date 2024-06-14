@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 describe('/notes_ui', () => {
 
-    const baseAppUrl = `${Cypress.env('baseAppUrl')}`
+    const baseAppUrl = Cypress.env('baseAppUrl')
     
     beforeEach(function () {
         cy.visit(baseAppUrl)
@@ -37,11 +37,15 @@ describe('/notes_ui', () => {
             cy.get('textarea[name="description"]').click().type(note.description)
             cy.contains('button', 'Create').click()
             cy.get('[data-testid="note-card-title"]').contains(note.title).should('be.visible')
+            cy.get('[data-testid="note-card-description"]').contains(note.description).should('be.visible')
+            cy.get('[data-testid="toggle-note-switch"]').should('be.checked')
             cy.get('[data-testid="note-view"]').contains('View').should('be.visible').click()
             cy.get('[data-testid="note-card-title"]').contains(note.title).should('be.visible')
+            cy.get('[data-testid="note-card-description"]').contains(note.description).should('be.visible')
+            cy.get('[data-testid="toggle-note-switch"]').should('be.checked')
             // Wait until we're on an note page.
             cy.location('pathname').should('match', /^\/notes\/.*$/);
-            // Extract the user ID from the URL and alias it.
+            // Extract the note ID from the URL and alias it.
             cy.location('pathname').then(path => {
                 // path = "/notes/api/notes/xxxxxxxxxxxxxxxxxxxxxxxxxx".
                 const note_id = path.split('/')[4];
@@ -144,8 +148,7 @@ describe('/notes_ui', () => {
         cy.get('textarea[name="description"]').click().type(note.description)
         cy.contains('button', 'Save').click()
         cy.get('[data-testid="note-card-title"]').contains(note.title).should('be.visible')
-        cy.get('[data-testid="note-card"]').contains(note.title).should('be.visible')
-        cy.get('[data-testid="note-card"]').contains(note.description).should('be.visible')
+        cy.get('[data-testid="note-card-description"]').contains(note.description).should('be.visible')
         cy.deleteNoteViaUi()
     })
 
@@ -154,6 +157,7 @@ describe('/notes_ui', () => {
         cy.contains('button', 'Edit').click()      
         cy.get('[data-testid="note-completed"]').click() 
         cy.contains('button', 'Save').click()
+        cy.get('[data-testid="toggle-note-switch"]').should('not.be.checked')
         cy.deleteNoteViaUi()
     })
     it('Delete a note via UI', () => {
