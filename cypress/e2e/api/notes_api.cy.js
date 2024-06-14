@@ -56,6 +56,64 @@ describe('/notes_api', () => {
         cy.deleteNoteViaApi()           
     })
 
+    it('Creates a new note via API - Bad request', () => {
+        cy.readFile('cypress/fixtures/api.json').then(response => { 
+            const user = {
+                user_token: response.user_token
+            } 
+            const note = {            
+                note_title: faker.word.words(3),
+                note_description: faker.word.words(5),
+                note_category: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
+            }
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/notes',
+                form: true,
+                headers: { 'X-Auth-Token': user.user_token },
+                body: {
+                    category: 'a',
+                    description: note.note_description,
+                    title: note.note_title                   
+                },
+                failOnStatusCode: false,
+            }).then(response => { 
+                expect(response.body.message).to.eq('Category must be one of the categories: Home, Work, Personal')
+                expect(response.status).to.eq(400)                
+                cy.log(JSON.stringify(response.body.message))              
+            })            
+        })                 
+    })
+
+    it('Creates a new note via API - Unauthorized request', () => {
+        cy.readFile('cypress/fixtures/api.json').then(response => { 
+            const user = {
+                user_token: response.user_token
+            } 
+            const note = {            
+                note_title: faker.word.words(3),
+                note_description: faker.word.words(5),
+                note_category: faker.helpers.arrayElement(['Home', 'Work', 'Personal'])
+            }
+            cy.api({
+                method: 'POST',
+                url: baseApiUrl + '/notes',
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                body: {
+                    category: note.note_category,
+                    description: note.note_description,
+                    title: note.note_title                   
+                },
+                failOnStatusCode: false,
+            }).then(response => { 
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message))               
+            })            
+        })                 
+    })
+
     it('Get all notes via API', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {         
             const user = {   
@@ -112,6 +170,57 @@ describe('/notes_api', () => {
         })         
     })
 
+    it('Get all notes via API - Unauthorized request', () => {
+        cy.readFile('cypress/fixtures/api.json').then(response => {         
+            const user = {   
+                user_id: response.user_id,
+                user_token: response.user_token
+            }
+            const arrayCategory = [faker.helpers.arrayElement(['Home', 'Work', 'Personal']), 'Home', 'Work', 'Personal']           
+            const arrayCompleted = [false, false, false, true]  
+            const arrayTitle = [faker.word.words(3), faker.word.words(3), faker.word.words(3), faker.word.words(3)]
+            const arrayDescription = [faker.word.words(5), faker.word.words(5), faker.word.words(5), faker.word.words(5)] 
+            const arrayNote_id = [0, 0, 0, 0]         
+            Cypress._.times(4, (k) => {
+                cy.api({
+                    method: 'POST',
+                    url: baseApiUrl + '/notes',
+                    form: true,
+                    headers: { 'X-Auth-Token': user.user_token },
+                    body: {
+                        category: arrayCategory[k],
+                        completed: arrayCompleted[k],
+                        description: arrayDescription[k],
+                        title: arrayTitle[k]                   
+                    },
+                }).then(response => {
+                    expect(response.body.data.category).to.eq(arrayCategory[k])
+                    expect(response.body.data.completed).to.eq(arrayCompleted[k])
+                    expect(response.body.data.description).to.eq(arrayDescription[k])  
+                    arrayNote_id[k] = response.body.data.id              
+                    expect(response.body.data.title).to.eq(arrayTitle[k])
+                    expect(response.body.data.user_id).to.eq(user.user_id)               
+                    expect(response.body.message).to.eq('Note successfully created')
+                    expect(response.status).to.eq(200)
+                    cy.log(JSON.stringify(response.body.message))                       
+                })
+            })        
+            Cypress._.times(4, (k) => {
+                cy.api({
+                    method: 'GET',
+                    url: baseApiUrl + '/notes/' ,
+                    form: true,
+                    headers: { 'X-Auth-Token': '@'+user.user_token },
+                    failOnStatusCode: false,
+                }).then(response => { 
+                    expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                    expect(response.status).to.eq(401) 
+                    cy.log(JSON.stringify(response.body.message)) 
+                })
+            })            
+        })         
+    })
+
     it('Get note by ID via API', () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -139,6 +248,30 @@ describe('/notes_api', () => {
                 expect(response.body.message).to.eq('Note successfully retrieved')
                 expect(response.status).to.eq(200)  
                 cy.log(JSON.stringify(response.body.message))
+            })
+        })         
+    })
+
+    it('Get note by ID via API - Unauthorized request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_id: response.user_id,
+                user_token: response.user_token
+            }  
+            const note = {
+                note_id: response.note_id
+            }
+            cy.api({
+                method: 'GET',
+                url: baseApiUrl + '/notes/' + note.note_id,
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message)) 
             })
         })         
     })
@@ -188,6 +321,80 @@ describe('/notes_api', () => {
             })
         })         
     })
+    
+    it('Update an existing note via API - Bad request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_id: response.user_id,
+                user_token: response.user_token
+            } 
+            const note = {
+                note_completed: faker.helpers.arrayElement([true, false]),
+                note_description: response.note_description,
+                note_id: response.note_id,
+                note_title: response.note_title
+            }
+            cy.log(note.note_title)
+            const updated_note = {
+                note_description: faker.word.words(5),
+                note_title: faker.word.words(3)
+            }
+            cy.api({
+                method: 'PUT',
+                url: baseApiUrl + '/notes/' + note.note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user.user_token },
+                body: {
+                    category: 'a',
+                    completed: note.note_completed,
+                    description: updated_note.note_description,
+                    title: updated_note.note_title                    
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq('Category must be one of the categories: Home, Work, Personal')
+                expect(response.status).to.eq(400)                
+                cy.log(JSON.stringify(response.body.message))
+            })
+        })         
+    })
+    
+    it('Update an existing note via API - Unauthorized request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_token: response.user_token
+            } 
+            const note = {
+                note_category: response.note_category,
+                note_completed: faker.helpers.arrayElement([true, false]),
+                note_id: response.note_id,
+            }
+            cy.log(note.note_title)
+            const updated_note = {
+                note_description: faker.word.words(5),
+                note_title: faker.word.words(3)
+            }
+            cy.api({
+                method: 'PUT',
+                url: baseApiUrl + '/notes/' + note.note_id,
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                body: {
+                    category: note.note_category,
+                    completed: note.note_completed,
+                    description: updated_note.note_description,
+                    title: updated_note.note_title                    
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message)) 
+            })
+        })         
+    })
 
     it('Update the completed status of a note via API', () => {
         cy.createNoteViaApi() 
@@ -225,6 +432,60 @@ describe('/notes_api', () => {
             })
         })          
     })
+    
+    it('Update the completed status of a note via API - Bad request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_token: response.user_token
+            }  
+            const note = {
+                note_id: response.note_id
+            }
+            cy.api({
+                method: 'PATCH',
+                url: baseApiUrl + '/notes/' + note.note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user.user_token },
+                //Here, it must have the completed status hardcoded to be sure that it is updated. A way to input the oposite of the faked value should be considered in the future.
+                body: {
+                    completed: 'a'
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq('Note completed status must be boolean')
+                expect(response.status).to.eq(400)                
+                cy.log(JSON.stringify(response.body.message))
+            })
+        })          
+    })
+    
+    it('Update the completed status of a note via API - Unauthorized request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_token: response.user_token
+            } 
+            const note = {
+                note_id: response.note_id
+            }
+            cy.api({
+                method: 'PATCH',
+                url: baseApiUrl + '/notes/' + note.note_id,
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user.user_token },
+                //Here, it must have the completed status hardcoded to be sure that it is updated. A way to input the oposite of the faked value should be considered in the future.
+                body: {
+                    completed: false
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message)) 
+            })
+        })          
+    })
 
     it('Delete a note by ID via API', () => {
         cy.createNoteViaApi() 
@@ -240,6 +501,44 @@ describe('/notes_api', () => {
                 expect(response.body.message).to.eq("Note successfully deleted")
                 expect(response.status).to.eq(200); 
                 cy.log(JSON.stringify(response.body.message))
+            })
+        })             
+    })
+
+    it('Delete a note by ID via API - Bad request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/notes/' + 2+note_id,
+                form: true,
+                headers: { 'X-Auth-Token': user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq('Note ID must be a valid ID')
+                expect(response.status).to.eq(400)                
+                cy.log(JSON.stringify(response.body.message))
+            })
+        })             
+    })
+
+    it('Delete a note by ID via API - Unauthorized request', () => {
+        cy.createNoteViaApi() 
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const note_id = response.note_id;
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/notes/' + note_id,
+                form: true,
+                headers: { 'X-Auth-Token': '@'+user_token },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Access token is not valid or has expired, you will need to login")
+                expect(response.status).to.eq(401) 
+                cy.log(JSON.stringify(response.body.message)) 
             })
         })             
     })

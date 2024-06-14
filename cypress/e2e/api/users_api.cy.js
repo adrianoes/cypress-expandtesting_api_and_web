@@ -103,8 +103,6 @@ describe('/users_api', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
                 user_email: response.user_email,
-                user_id: response.user_id,
-                user_name: response.user_name,
                 user_password: response.user_password,
             }
             cy.api({
@@ -131,8 +129,6 @@ describe('/users_api', () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
                 user_email: response.user_email,
-                user_id: response.user_id,
-                user_name: response.user_name,
                 user_password: response.user_password,
             }
             cy.api({
@@ -187,10 +183,6 @@ describe('/users_api', () => {
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
-                user_email: response.user_email,
-                user_id: response.user_id,
-                user_name: response.user_name,
-                user_password: response.user_password,
                 user_token: response.user_token
             }
             cy.api({
