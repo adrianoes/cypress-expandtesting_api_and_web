@@ -178,6 +178,35 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
+    it('Retrieve user profile information via API - Bad Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user = {
+                user_email: response.user_email,
+                user_id: response.user_id,
+                user_name: response.user_name,
+                user_password: response.user_password,
+                user_token: response.user_token
+            }
+            cy.api({
+                method: 'GET',
+                url: baseApiUrl + '/users/profile',
+                form: true,
+                headers: { 
+                    'X-Auth-Token': user.user_token,
+                    'x-content-format': 'badRequest'
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Invalid X-Content-Format header, Only application/json is supported.")
+                expect(response.status).to.eq(400) 
+                cy.log(JSON.stringify(response.body.message))               
+            })
+        })   
+        cy.deleteUserViaApi()      
+    })
+
     it('Retrieve user profile information via API - Unauthorized Request', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -414,6 +443,33 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
+    it('Log out a user via API - Bad Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/users/logout',
+                //sets to application/x-www-form-urlencoded
+                form: true, 
+                headers: { 
+                    'X-Auth-Token': user_token,
+                    'x-content-format': 'badRequest'
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Invalid X-Content-Format header, Only application/json is supported.")
+                expect(response.status).to.eq(400); 
+                cy.log(JSON.stringify(response.body.message))
+            })
+        })  
+        //When login out, token becomes invalid, so there is the need to log in again to delete the user
+        //Login out was not executed so we can directly delete the user without the need to login again.
+        // cy.logInUserViaApi()
+        cy.deleteUserViaApi()      
+    })
+
     it('Log out a user via API - Unauthorized Request', () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
@@ -454,6 +510,30 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))             
             })
         })        
+    })
+
+    it('Delete user account via API - Bad Request', () => {
+        cy.createUserViaApi()
+        cy.logInUserViaApi()
+        cy.readFile('cypress/fixtures/api.json').then(response => {
+            const user_token = response.user_token;
+            cy.api({
+                method: 'DELETE',
+                url: baseApiUrl + '/users/delete-account',
+                form: true, 
+                headers: { 
+                    'X-Auth-Token': user_token,
+                    'x-content-format': 'badRequest'
+                },
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.body.message).to.eq("Invalid X-Content-Format header, Only application/json is supported.")
+                expect(response.status).to.eq(400); 
+                cy.log(JSON.stringify(response.body.message))
+            })
+        }) 
+        //call deleteUserViaApi() to delete the user after verify the unauthorized condition above
+        cy.deleteUserViaApi()       
     })
 
     it('Delete user account via API - Unauthorized Request', () => {
