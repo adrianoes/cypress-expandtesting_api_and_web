@@ -14,7 +14,7 @@ describe('/notes_api', () => {
         cy.writeFile('cypress/fixtures/api.json', '')
     });
 
-    it('Creates a new note via API', () => {
+    it('Creates a new note via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => { 
             const user = {
                 user_id: response.user_id,
@@ -56,7 +56,7 @@ describe('/notes_api', () => {
         cy.deleteNoteViaApi()           
     })
 
-    it('Creates a new note via API - Bad request', () => {
+    it('Creates a new note via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => { 
             const user = {
                 user_token: response.user_token
@@ -85,7 +85,7 @@ describe('/notes_api', () => {
         })                 
     })
 
-    it('Creates a new note via API - Unauthorized request', () => {
+    it('Creates a new note via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => { 
             const user = {
                 user_token: response.user_token
@@ -114,7 +114,7 @@ describe('/notes_api', () => {
         })                 
     })
 
-    it('Get all notes via API', () => {
+    it('Get all notes via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {         
             const user = {   
                 user_id: response.user_id,
@@ -170,7 +170,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Get all notes via API - Bad request', () => {
+    it('Get all notes via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {         
             const user = {   
                 user_id: response.user_id,
@@ -224,7 +224,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Get all notes via API - Unauthorized request', () => {
+    it('Get all notes via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.readFile('cypress/fixtures/api.json').then(response => {         
             const user = {   
                 user_id: response.user_id,
@@ -275,7 +275,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Get note by ID via API', () => {
+    it('Get note by ID via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -306,7 +306,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Get note by ID via API - Bad request', () => {
+    it('Get note by ID via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -333,7 +333,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Get note by ID via API - Unauthorized request', () => {
+    it('Get note by ID via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -357,7 +357,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Update an existing note via API', () => {
+    it('Update an existing note via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -403,7 +403,7 @@ describe('/notes_api', () => {
         })         
     })
     
-    it('Update an existing note via API - Bad request', () => {
+    it('Update an existing note via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -441,7 +441,7 @@ describe('/notes_api', () => {
         })         
     })
     
-    it('Update an existing note via API - Unauthorized request', () => {
+    it('Update an existing note via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -477,7 +477,7 @@ describe('/notes_api', () => {
         })         
     })
 
-    it('Update the completed status of a note via API', () => {
+    it('Update the completed status of a note via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -514,7 +514,7 @@ describe('/notes_api', () => {
         })          
     })
     
-    it('Update the completed status of a note via API - Bad request', () => {
+    it('Update the completed status of a note via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -541,7 +541,7 @@ describe('/notes_api', () => {
         })          
     })
     
-    it('Update the completed status of a note via API - Unauthorized request', () => {
+    it('Update the completed status of a note via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -568,7 +568,7 @@ describe('/notes_api', () => {
         })          
     })
 
-    it('Delete a note by ID via API', () => {
+    it('Delete a note by ID via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note_id = response.note_id;
@@ -586,7 +586,7 @@ describe('/notes_api', () => {
         })             
     })
 
-    it('Delete a note by ID via API - Bad request', () => {
+    it('Delete a note by ID via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note_id = response.note_id;
@@ -605,7 +605,7 @@ describe('/notes_api', () => {
         })             
     })
 
-    it('Delete a note by ID via API - Unauthorized request', () => {
+    it('Delete a note by ID via API - Unauthorized request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createNoteViaApi() 
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const note_id = response.note_id;

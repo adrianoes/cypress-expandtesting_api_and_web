@@ -14,7 +14,7 @@ describe('/notes_ui', () => {
         cy.writeFile('cypress/fixtures/ui.json', '')
     });
 
-    it('Create a new note via UI', () => {
+    it('Create a new note via UI', { tags: ['UI', 'BASIC', 'FULL'] }, () => {
         //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing.
         cy.readFile('cypress/fixtures/ui.json').then(response => {
             const user = {   
@@ -67,7 +67,45 @@ describe('/notes_ui', () => {
         cy.deleteNoteViaUi()
     })
 
-    it('Get all notes via UI', () => {
+    it('Create a new note via UI - Invalid title', { tags: ['UI', 'FULL', 'NEGATIVE'] }, () => {
+        //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing.
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const note = {            
+                description: faker.word.words(5),
+                category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
+                completed: faker.number.int({ min: 1, max: 2 })
+            }
+            cy.visit(baseAppUrl)
+            cy.contains('button', '+ Add Note').click()
+            cy.get('[name="category"]').should('be.visible').select(note.category)        
+            cy.get('[data-testid="note-completed"]').click(note.completed) 
+            cy.get('input[name="title"]').click().type('e')
+            cy.get('textarea[name="description"]').click().type(note.description)
+            cy.contains('button', 'Create').click()
+            cy.get(':nth-child(3) > .invalid-feedback').contains('Title should be between 4 and 100 characters').should('be.visible')
+        })   
+    })
+
+    it('Create a new note via UI - Invalid description', { tags: ['UI', 'FULL', 'NEGATIVE'] }, () => {
+        //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing.
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const note = {            
+                title: faker.word.words(3),
+                category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
+                completed: faker.number.int({ min: 1, max: 2 })
+            }
+            cy.visit(baseAppUrl)
+            cy.contains('button', '+ Add Note').click()
+            cy.get('[name="category"]').should('be.visible').select(note.category)        
+            cy.get('[data-testid="note-completed"]').click(note.completed) 
+            cy.get('input[name="title"]').click().type(note.title)
+            cy.get('textarea[name="description"]').click().type('e')
+            cy.contains('button', 'Create').click()
+            cy.get(':nth-child(4) > .invalid-feedback').contains('Description should be between 4 and 1000 characters').should('be.visible')
+        })   
+    })
+
+    it('Get all notes via UI', { tags: ['UI', 'BASIC', 'FULL'] }, () => {
         cy.readFile('cypress/fixtures/ui.json').then(response => {
             const user = {   
                 user_id: response.user_id,             
@@ -133,7 +171,7 @@ describe('/notes_ui', () => {
         })  
     })
 
-    it('Update an existing note via UI', () => {
+    it('Update an existing note via UI', { tags: ['UI', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaUi()
         cy.contains('button', 'Edit').click()
         const note = {            
@@ -152,7 +190,36 @@ describe('/notes_ui', () => {
         cy.deleteNoteViaUi()
     })
 
-    it('Update the completed status of a note via UI', () => {
+    it('Update an existing note via UI - Invalid title', { tags: ['UI', 'FULL', 'NEGATIVE'] }, () => {
+        cy.createNoteViaUi()
+        cy.contains('button', 'Edit').click()
+        const note = {            
+            category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
+            completed: faker.number.int({ min: 1, max: 2 })
+        }
+        cy.get('[name="category"]').should('be.visible').select(note.category)      
+        cy.get('[data-testid="note-completed"]').click(note.completed) 
+        //clear the field and type 'e' so title will be short and by so, invalid.
+        cy.get('input[name="title"]').clear().type('e')
+        cy.contains('button', 'Save').click()
+        cy.get(':nth-child(3) > .invalid-feedback').contains('Title should be between 4 and 100 characters').should('be.visible')
+    })
+
+    it('Update an existing note via UI - Invalid description', { tags: ['UI', 'FULL', 'NEGATIVE'] }, () => {
+        cy.createNoteViaUi()
+        cy.contains('button', 'Edit').click()
+        const note = {            
+            category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
+            completed: faker.number.int({ min: 1, max: 2 })
+        }
+        cy.get('[name="category"]').should('be.visible').select(note.category)      
+        cy.get('[data-testid="note-completed"]').click(note.completed)
+        cy.get('textarea[name="description"]').clear().type('e')
+        cy.contains('button', 'Save').click()
+        cy.get(':nth-child(4) > .invalid-feedback').contains('Description should be between 4 and 1000 characters').should('be.visible')
+    })    
+
+    it('Update the completed status of a note via UI', { tags: ['UI', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaUi()
         cy.contains('button', 'Edit').click()      
         cy.get('[data-testid="note-completed"]').click() 
@@ -160,7 +227,7 @@ describe('/notes_ui', () => {
         cy.get('[data-testid="toggle-note-switch"]').should('not.be.checked')
         cy.deleteNoteViaUi()
     })
-    it('Delete a note via UI', () => {
+    it('Delete a note via UI', { tags: ['UI', 'BASIC', 'FULL'] }, () => {
         cy.createNoteViaUi()
         cy.contains('button', 'Delete').click()
         cy.readFile('cypress/fixtures/ui.json').then(response => {

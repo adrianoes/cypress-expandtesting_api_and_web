@@ -8,7 +8,7 @@ describe('/users_api', () => {
         cy.writeFile('cypress/fixtures/api.json', '')
     });
     
-    it('Creates a new user account via API', () => {
+    it('Creates a new user account via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         const user = {            
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
             user_email: faker.internet.exampleEmail().toLowerCase(),
@@ -40,7 +40,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Creates a new user account via API - Bad request', () => {
+    it('Creates a new user account via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         const user = {            
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
             user_email: faker.internet.exampleEmail().toLowerCase(),
@@ -63,7 +63,7 @@ describe('/users_api', () => {
         })      
     })
 
-    it('Log in as an existing user via API', () => {
+    it('Log in as an existing user via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -98,7 +98,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Log in as an existing user via API - Bad request', () => {
+    it('Log in as an existing user via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -124,7 +124,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Log in as an existing user via API - Unauthorized Request', () => {
+    it('Log in as an existing user via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
             const user = {
@@ -150,7 +150,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Retrieve user profile information via API', () => {
+    it('Retrieve user profile information via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -178,7 +178,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Retrieve user profile information via API - Bad Request', () => {
+    it('Retrieve user profile information via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -207,7 +207,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Retrieve user profile information via API - Unauthorized Request', () => {
+    it('Retrieve user profile information via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -229,7 +229,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Update the user profile information via API', () => {
+    it('Update the user profile information via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => { 
@@ -269,7 +269,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Update the user profile information via API - Bad Request', () => {
+    it('Update the user profile information via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => { 
@@ -302,7 +302,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Update the user profile information via API - Unauthorized Request', () => {
+    it('Update the user profile information via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => { 
@@ -335,7 +335,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Change a user\'s password via API', () => {
+    it('Change a user\'s password via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -363,7 +363,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Change a user\'s password via API - Bad Request', () => {
+    it('Change a user\'s password via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -392,7 +392,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Change a user\'s password via API - Unauthorized Request', () => {
+    it('Change a user\'s password via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -421,7 +421,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()        
     })
 
-    it('Log out a user via API', () => {
+    it('Log out a user via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -443,7 +443,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Log out a user via API - Bad Request', () => {
+    it('Log out a user via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -470,7 +470,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Log out a user via API - Unauthorized Request', () => {
+    it('Log out a user via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -494,7 +494,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()      
     })
 
-    it('Delete user account via API', () => {
+    it('Delete user account via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -512,7 +512,7 @@ describe('/users_api', () => {
         })        
     })
 
-    it('Delete user account via API - Bad Request', () => {
+    it('Delete user account via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {
@@ -536,7 +536,7 @@ describe('/users_api', () => {
         cy.deleteUserViaApi()       
     })
 
-    it('Delete user account via API - Unauthorized Request', () => {
+    it('Delete user account via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
         cy.createUserViaApi()
         cy.logInUserViaApi()
         cy.readFile('cypress/fixtures/api.json').then(response => {

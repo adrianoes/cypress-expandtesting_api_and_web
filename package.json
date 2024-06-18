@@ -5,6 +5,7 @@
   "author": "Adriano Santos",
   "license": "MIT",
   "devDependencies": {
+    "@cypress/grep": "^4.0.2",
     "@faker-js/faker": "^8.4.1",
     "cypress-plugin-api": "^2.11.1"
   }

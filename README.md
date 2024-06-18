@@ -34,6 +34,7 @@ Check then both to add both options in context menu.
 - Look for Cypress Helper in the extensions marketplace and install the one from Oleksandr Shevtsov.
 - Execute ```npm i cypress-plugin-api -D``` to install cypress api plugin.
 - Execute ```npm install @faker-js/faker --save-dev``` to install faker library.
+- Execute ```npm i -D @cypress/grep``` to install @cypress/grep.
 - Execute ```npx cypress open``` to open cypress.
 - Hit :point_right:**E2E Testing** configuration option. 
 - Keep all the configuration files options checked and hit :point_right:**Continue**.
@@ -45,6 +46,10 @@ Check then both to add both options in context menu.
 
 - Execute ```yarn cypress open``` to open cypress app and execute step by step, being able to debug the execution. 
 - Execute ```yarn cypress run``` to execute cypress in headless mode.
+- Execute ```CYPRESS_grepTags=BASIC yarn cypress run``` to execute cypress tests tagged as "BASIC"
+- Execute ```CYPRESS_grepTags=FULL+API yarn cypress run``` to execute cypress tests tagged as both "FULL" and "API".
+- Execute ```CYPRESS_grepTags=NEGATIVE,UI yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "UI".
+- Execute ```CYPRESS_grepTags=-API yarn cypress run``` to execute cypress tests not tagged as "API".
 
 # Support:
 
@@ -60,6 +65,7 @@ Check then both to add both options in context menu.
 - [A Practical Guide to Intercepting Network Requests in Cypress](https://egghead.io/blog/intercepting-network-requests-in-cypress)
 - [Cypress IO- Writing a For Loop [closed]](https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop)
 - [Learn Cypress.io the Hard Way: Case-Insensitive](https://iterable.com/blog/learn-cypress-io-the-hard-way-case-insensitive/)
+- [@cypress/grep](https://www.npmjs.com/package/@cypress/grep)
 
 # Tips:
 

@@ -11,7 +11,7 @@ describe('/users_ui', () => {
         cy.writeFile('cypress/fixtures/ui.json', '')
     });
 
-    it('Creates a new user account via UI', () => {
+    it('Creates a new user account via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -46,7 +46,45 @@ describe('/users_ui', () => {
         cy.deleteUserViaUi()
     })
 
-    it('Log in as an existing user via UI', () => {
+    it('Creates a new user account via UI - Invalid e-mail', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        const user = {
+            name: faker.person.fullName(), 
+            //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
+            email: faker.internet.exampleEmail().toLowerCase(),
+            password: faker.internet.password({ length: 8 })
+        }
+        cy.get('[href="/notes/app/register"]').contains('Create an account').should('be.visible').click()
+        cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+        cy.get('.badge').should('have.text', 'Tip').should('be.visible')
+        cy.get('input[name="email"]').click().type('@'+user.email)
+        cy.get('input[name="name"]').click().type(user.name)
+        cy.get('input[name="password"]').click().type(user.password)
+        cy.get('input[name="confirmPassword"]').click().type(user.password)
+        cy.intercept('/notes/api/users/register').as('loginForm')
+        cy.contains('button', 'Register').click()
+        cy.get('[data-testid="alert-message"]').contains('A valid email address is required').should('be.visible')
+    })
+
+    it('Creates a new user account via UI - Wrong password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        const user = {
+            name: faker.person.fullName(), 
+            //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
+            email: faker.internet.exampleEmail().toLowerCase(),
+            password: faker.internet.password({ length: 8 })
+        }
+        cy.get('[href="/notes/app/register"]').contains('Create an account').should('be.visible').click()
+        cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+        cy.get('.badge').should('have.text', 'Tip').should('be.visible')
+        cy.get('input[name="email"]').click().type(user.email)
+        cy.get('input[name="name"]').click().type(user.name)
+        cy.get('input[name="password"]').click().type(user.password)
+        cy.get('input[name="confirmPassword"]').click().type('e'+user.password)
+        cy.intercept('/notes/api/users/register').as('loginForm')
+        cy.contains('button', 'Register').click()
+        cy.get('.mb-3 > .invalid-feedback').contains('Passwords don\'t match!').should('be.visible')
+    })
+
+    it('Log in as an existing user via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.readFile('cypress/fixtures/ui.json').then(response => {
             const user = {
@@ -82,14 +120,56 @@ describe('/users_ui', () => {
         cy.deleteUserViaUi()       
     })
 
-    it('Retrieve user profile information via UI', () => {
+    it('Log in as an existing user via UI - Wrong password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        cy.createUserViaUi()
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const user = {
+                user_id: response.user_id,
+                user_email: response.user_email,
+                user_name: response.user_name,
+                user_password: response.user_password
+            }        
+            cy.visit(baseAppUrl + '/login')
+            cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+            cy.get('input[name="email"]').click().type(user.user_email)
+            cy.get('input[name="password"]').click().type('e'+user.user_password)
+            cy.contains('button', 'Login').click()    
+            cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
+        })
+        //correct login to login, get the token and delete the user to clean the environment.
+        cy.logInUserViaUi()   
+        cy.deleteUserViaUi()       
+    })
+
+    it('Log in as an existing user via UI - Invalid e-mail', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        cy.createUserViaUi()
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const user = {
+                user_id: response.user_id,
+                user_email: response.user_email,
+                user_name: response.user_name,
+                user_password: response.user_password
+            }        
+            cy.visit(baseAppUrl + '/login')
+            cy.title().should('eq', 'Notes React Application for Automation Testing Practice')
+            cy.get('input[name="email"]').click().type('e'+user.user_email)
+            cy.get('input[name="password"]').click().type(user.user_password)
+            cy.contains('button', 'Login').click()    
+            cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
+        })
+        //correct login to login, get the token and delete the user to clean the environment.
+        cy.logInUserViaUi()   
+        cy.deleteUserViaUi()       
+    })
+
+    it('Retrieve user profile information via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()      
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.deleteUserViaUi()       
     })
 
-    it('Update user profile information via UI', () => {
+    it('Update user profile information via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
@@ -100,7 +180,29 @@ describe('/users_ui', () => {
         cy.deleteUserViaUi()       
     })
 
-    it('Change a user\'s password via UI', () => {
+    it('Update user profile information via UI - Invalid company name', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+        cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
+        cy.get('input[name="company"]').click().type('e')
+        cy.contains('button', 'Update profile').click()
+        cy.get('.mb-4 > .invalid-feedback').contains('company name should be between 4 and 30 characters').should('be.visible')
+        cy.deleteUserViaUi()       
+    })
+
+    it('Update user profile information via UI - Invalid phone number', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+        cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 2 }))
+        cy.get('input[name="company"]').click().type(faker.internet.userName())
+        cy.contains('button', 'Update profile').click()
+        cy.get(':nth-child(2) > .mb-2 > .invalid-feedback').contains('Phone number should be between 8 and 20 digits').should('be.visible')
+        cy.deleteUserViaUi()       
+    })
+
+    it('Change a user\'s password via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()        
         cy.readFile('cypress/fixtures/ui.json').then(response => {
@@ -119,7 +221,25 @@ describe('/users_ui', () => {
         cy.deleteUserViaUi()       
     })
 
-    it('Log out a user via UI', () => {
+    it('Change a user\'s password via UI - Type same password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+        cy.createUserViaUi()
+        cy.logInUserViaUi()        
+        cy.readFile('cypress/fixtures/ui.json').then(response => {
+            const user = {
+                user_password: response.user_password
+            } 
+            cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
+            cy.get('[data-testid="change-password"]').contains('Change password').should('be.visible').click()
+            cy.get('input[data-testid="current-password"]').click().type(user.user_password)
+            cy.get('input[data-testid="new-password"]').click().type(user.user_password)
+            cy.get('input[data-testid="confirm-password"]').click().type(user.user_password)
+            cy.contains('button', 'Update password').click()
+            cy.get('[data-testid="alert-message"]').contains('The new password should be different from the current password').should('be.visible')
+        })
+        cy.deleteUserViaUi()       
+    })
+
+    it('Log out a user via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.logInUserViaUi() 
         cy.contains('button', 'Logout').click()
@@ -128,7 +248,7 @@ describe('/users_ui', () => {
         cy.deleteUserViaUi()       
     })
 
-    it('Delete user account via UI', () => {
+    it('Delete user account via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
         cy.createUserViaUi()
         cy.logInUserViaUi()
         cy.visit(baseAppUrl + '/profile')
