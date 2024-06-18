@@ -5,8 +5,8 @@ const baseAppUrl = Cypress.env('baseAppUrl')
 Cypress.Commands.add('logInUserViaUi', () => {
     cy.readFile('cypress/fixtures/ui.json').then(response => {
         const user = {
-            user_id: response.user_id,
             user_email: response.user_email,
+            user_id: response.user_id,
             user_name: response.user_name,
             user_password: response.user_password
         }        

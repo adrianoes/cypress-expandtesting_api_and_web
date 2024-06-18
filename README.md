@@ -1,6 +1,6 @@
 # cypress-expandtesting_UI_and_API
 
-UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands were used, the assertion code to each test was kept in it so we can work independently in each test. 
+UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. This project contains basic examples on how to use cypress to test UI, API and how to combine UI and API tests. Good practices such as hooks, custom commands and tags, among others, are used. All the necessary support documentation to develop this project is placed here. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands are used, the assertion code to each test is kept in it so we can work independently in each test. 
 
 # Pre-requirements:
 
@@ -14,6 +14,7 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | Cypress Helper                | v1.2.2  | Optional.                                                       |
 | cypress-plugin-api            | 2.11.1  | Optional. Recommended so you can observe API traces in browser. |
 | @faker-js/faker               | 8.4.1   | Optional. Recommended so you will not be using same test data.  |
+| @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
 
 # Instalation:
 
@@ -49,7 +50,7 @@ Check then both to add both options in context menu.
 - Execute ```CYPRESS_grepTags=BASIC yarn cypress run``` to execute cypress tests tagged as "BASIC"
 - Execute ```CYPRESS_grepTags=FULL+API yarn cypress run``` to execute cypress tests tagged as both "FULL" and "API".
 - Execute ```CYPRESS_grepTags=NEGATIVE,UI yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "UI".
-- Execute ```CYPRESS_grepTags=-API yarn cypress run``` to execute cypress tests not tagged as "API".
+- Execute ```CYPRESS_grepTags=-UI_AND_API yarn cypress run``` to execute cypress tests not tagged as "UI_AND_API".
 
 # Support:
 
