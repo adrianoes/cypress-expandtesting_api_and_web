@@ -14,7 +14,7 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | Cypress Helper                | v1.2.2  | Optional.                                                       |
 | cypress-plugin-api            | 2.11.1  | Optional. Recommended so you can observe API traces in browser. |
 | @faker-js/faker               | 8.4.1   | Optional. Recommended so you will not be using same test data.  |
-| @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
+| @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags.      |
 
 # Instalation:
 
