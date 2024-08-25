@@ -1,6 +1,6 @@
 # cypress-expandtesting_UI_and_API
 
-UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. This project contains basic examples on how to use cypress to test UI, API and how to combine UI and API tests. Good practices such as hooks, custom commands and tags, among others, are used. All the necessary support documentation to develop this project is placed here. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands are used, the assertion code to each test is kept in it so we can work independently in each test. 
+UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. This project contains basic examples on how to use cypress to test UI, API and how to combine UI and API tests. Good practices such as hooks, custom commands and tags, among others, are used. All the necessary support documentation to develop this project is placed here. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands are used, the assertion code to each test is kept in it so we can work independently in each test. It creates one .json file for each test so we can share data between different requests in the test. The .json file is excluded after each test execution.  
 
 # Pre-requirements:
 
@@ -15,8 +15,9 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | cypress-plugin-api            | 2.11.1  | Optional. Recommended so you can observe API traces in browser. |
 | @faker-js/faker               | 8.4.1   | Optional. Recommended so you will not be using same test data.  |
 | @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
+| Cypress-fs                    | 0.2.5   |                                                                 |
 
-# Instalation:
+# Installation:
 
 - See [Node.js page](https://nodejs.org/en) and install the aforementioned Node.js version. Keep all the preferenced options as they are.
 - To use yarn packet manager, open windows prompt as admin and execute ```corepack enable``` (Optional).
@@ -36,6 +37,7 @@ Check then both to add both options in context menu.
 - Execute ```npm i cypress-plugin-api -D``` to install cypress api plugin.
 - Execute ```npm install @faker-js/faker --save-dev``` to install faker library.
 - Execute ```npm i -D @cypress/grep``` to install @cypress/grep.
+- Execute ```npm install cypress-fs --save-dev``` to install Cypress-fs.
 - Execute ```npx cypress open``` to open cypress.
 - Hit :point_right:**E2E Testing** configuration option. 
 - Keep all the configuration files options checked and hit :point_right:**Continue**.
@@ -67,6 +69,8 @@ Check then both to add both options in context menu.
 - [Cypress IO- Writing a For Loop [closed]](https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop)
 - [Learn Cypress.io the Hard Way: Case-Insensitive](https://iterable.com/blog/learn-cypress-io-the-hard-way-case-insensitive/)
 - [@cypress/grep](https://www.npmjs.com/package/@cypress/grep)
+- [Cypress-fs](https://www.npmjs.com/package/cypress-fs)
+- [How to use a module 'fs' in Cypress?](https://stackoverflow.com/a/77250696/10519428)
 
 # Tips:
 

@@ -10,7 +10,7 @@ module.exports = defineConfig({
     viewportHeight: 1080,
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
-      return config;
+      return require("./node_modules/cypress-fs/plugins/index.js")(on, config)
     }    
   },
   env: {

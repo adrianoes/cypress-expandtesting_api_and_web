@@ -2,3 +2,4 @@ node_modules/
 commiting.txt
 cypress/videos
 cypress/screenshots
+cypress/downloads
