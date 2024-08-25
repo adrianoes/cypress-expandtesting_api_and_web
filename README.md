@@ -10,6 +10,7 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | npm                           | 10.2.4  | -                                                               |
 | Yarn                          | 1.22.19 | Optional.                                                       |
 | Cypress                       | 13.10.0 | -                                                               |
+| Cypress-fs                    | 0.2.5   | -                                                               |
 | Visual Studio Code            | 1.89.1  | Optional. Recommended so you can use Cypress Helper extension.  |
 | @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
 | Cypress Helper                | v1.2.2  | Optional.                                                       |
