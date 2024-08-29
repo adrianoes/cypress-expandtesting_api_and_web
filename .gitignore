@@ -3,3 +3,4 @@ commiting.txt
 cypress/videos
 cypress/screenshots
 cypress/downloads
+/runner-results

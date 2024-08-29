@@ -11,6 +11,7 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | Yarn                          | 1.22.19 | Optional.                                                       |
 | Cypress                       | 13.10.0 | -                                                               |
 | Cypress-fs                    | 0.2.5   | -                                                               |
+| cypress-parallel              | 0.14.0  | Optional.                                                       |
 | Visual Studio Code            | 1.89.1  | Optional. Recommended so you can use Cypress Helper extension.  |
 | @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
 | Cypress Helper                | v1.2.2  | Optional.                                                       |
@@ -39,6 +40,7 @@ Check then both to add both options in context menu.
 - Execute ```npm install @faker-js/faker --save-dev``` to install faker library.
 - Execute ```npm i -D @cypress/grep``` to install @cypress/grep.
 - Execute ```npm install cypress-fs --save-dev``` to install Cypress-fs.
+- Execute ```npm i cypress-parallel``` to install cypress-parallel plugin.
 - Execute ```npx cypress open``` to open cypress.
 - Hit :point_right:**E2E Testing** configuration option. 
 - Keep all the configuration files options checked and hit :point_right:**Continue**.
@@ -49,11 +51,12 @@ Check then both to add both options in context menu.
 # Tests:
 
 - Execute ```yarn cypress open``` to open cypress app and execute step by step, being able to debug the execution. 
-- Execute ```yarn cypress run``` to execute cypress in headless mode.
+- Execute ```yarn cypress run``` or ```npx cypress run``` to execute cypress in headless mode.
 - Execute ```CYPRESS_grepTags=BASIC yarn cypress run``` to execute cypress tests tagged as "BASIC"
 - Execute ```CYPRESS_grepTags=FULL+API yarn cypress run``` to execute cypress tests tagged as both "FULL" and "API".
 - Execute ```CYPRESS_grepTags=NEGATIVE,UI yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "UI".
 - Execute ```CYPRESS_grepTags=-UI_AND_API yarn cypress run``` to execute cypress tests not tagged as "UI_AND_API".
+- Execute ```npm run cy:parallel``` to execute cypress tests in parallel.
 
 # Support:
 
@@ -72,6 +75,7 @@ Check then both to add both options in context menu.
 - [@cypress/grep](https://www.npmjs.com/package/@cypress/grep)
 - [Cypress-fs](https://www.npmjs.com/package/cypress-fs)
 - [How to use a module 'fs' in Cypress?](https://stackoverflow.com/a/77250696/10519428)
+- [cypress-parallel](https://www.npmjs.com/package/cypress-parallel)
 
 # Tips:
 
