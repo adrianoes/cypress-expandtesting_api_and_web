@@ -4,8 +4,8 @@ const baseApiUrl = Cypress.env('baseApiUrl')
 const baseAppUrl = Cypress.env('baseAppUrl')
 
 
-Cypress.Commands.add('logInUserViaApi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+Cypress.Commands.add('logInUserViaApi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {
             user_email: response.user_email,
             user_id: response.user_id,
@@ -26,7 +26,7 @@ Cypress.Commands.add('logInUserViaApi', (bypassParalelismNumber) => {
             expect(response.body.message).to.eq("Login successful")
             expect(response.status).to.eq(200)
             cy.log(JSON.stringify(response.body.name))
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_email": user.user_email,
                 "user_id": user.user_id,
                 "user_name": user.user_name,
@@ -37,8 +37,8 @@ Cypress.Commands.add('logInUserViaApi', (bypassParalelismNumber) => {
     }) 
 })
 
-Cypress.Commands.add('deleteUserViaApi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+Cypress.Commands.add('deleteUserViaApi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user_token = response.user_token;
         cy.api({
             method: 'DELETE',
@@ -52,7 +52,7 @@ Cypress.Commands.add('deleteUserViaApi', (bypassParalelismNumber) => {
     })
 })
 
-Cypress.Commands.add('createUserViaApi', (bypassParalelismNumber) => {
+Cypress.Commands.add('createUserViaApi', (randomNumber) => {
     const user = {            
         user_email: faker.internet.exampleEmail().toLowerCase(),
         user_name: faker.person.fullName(), 
@@ -72,7 +72,7 @@ Cypress.Commands.add('createUserViaApi', (bypassParalelismNumber) => {
         expect(response.body.message).to.eq("User account created successfully")
         expect(response.status).to.eq(201)                
         cy.log(JSON.stringify(response.body.message))
-        cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+        cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
             "user_email": response.body.data.email,
             "user_id": response.body.data.id,
             "user_name": response.body.data.name,                
@@ -81,8 +81,8 @@ Cypress.Commands.add('createUserViaApi', (bypassParalelismNumber) => {
     })
 })
 
-Cypress.Commands.add('deleteNoteViaApi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+Cypress.Commands.add('deleteNoteViaApi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const note_id = response.note_id;
         const user_token = response.user_token;
         cy.api({
@@ -97,8 +97,8 @@ Cypress.Commands.add('deleteNoteViaApi', (bypassParalelismNumber) => {
     })
 })
 
-Cypress.Commands.add('createNoteViaApi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => { 
+Cypress.Commands.add('createNoteViaApi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => { 
         const user = {
             user_id: response.user_id,
             user_token: response.user_token
@@ -126,7 +126,7 @@ Cypress.Commands.add('createNoteViaApi', (bypassParalelismNumber) => {
             expect(response.body.message).to.eq('Note successfully created')
             expect(response.status).to.eq(200)                
             cy.log(JSON.stringify(response.body.message))
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "note_category": response.body.data.category,
                 "note_description": response.body.data.description,
                 "note_id": response.body.data.id,
@@ -138,8 +138,8 @@ Cypress.Commands.add('createNoteViaApi', (bypassParalelismNumber) => {
     })        
 })
 
-Cypress.Commands.add('logInUserViaUi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+Cypress.Commands.add('logInUserViaUi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {
             user_email: response.user_email,
             user_id: response.user_id,
@@ -161,7 +161,7 @@ Cypress.Commands.add('logInUserViaUi', (bypassParalelismNumber) => {
             cy.get('[data-testid="user-name"]').should('have.value', user.user_name).should('be.visible')
             expect(response.body.message).to.eq('Login successful')
             expect(response.statusCode).to.eq(200)
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_id": user.user_id,
                 "user_email": user.user_email,
                 "user_name": user.user_name,
@@ -179,7 +179,7 @@ Cypress.Commands.add('deleteUserViaUi', () =>{
     cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
 })
 
-Cypress.Commands.add('createUserViaUi', (bypassParalelismNumber)=>{
+Cypress.Commands.add('createUserViaUi', (randomNumber)=>{
     const user = {
         name: faker.person.fullName(), 
         //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -203,7 +203,7 @@ Cypress.Commands.add('createUserViaUi', (bypassParalelismNumber)=>{
     cy.wait('@loginForm').then(({response}) => {
         expect(response.statusCode).to.eq(201)
         expect(response.body.message).to.eq('User account created successfully')
-        cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+        cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
             "user_email": user.email,
             "user_name": user.name,
             "user_password": user.password,
@@ -212,9 +212,9 @@ Cypress.Commands.add('createUserViaUi', (bypassParalelismNumber)=>{
     })
 })
 
-Cypress.Commands.add('deleteNoteViaUi', (bypassParalelismNumber) =>{
+Cypress.Commands.add('deleteNoteViaUi', (randomNumber) =>{
     cy.contains('button', 'Delete').click()
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const note = {
             note_title: response.note_title
         }          
@@ -223,9 +223,9 @@ Cypress.Commands.add('deleteNoteViaUi', (bypassParalelismNumber) =>{
     })
 })
 
-Cypress.Commands.add('createNoteViaUi', (bypassParalelismNumber)=>{
+Cypress.Commands.add('createNoteViaUi', (randomNumber)=>{
     //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing.
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {   
             user_id: response.user_id,             
             user_email: response.user_email,
@@ -260,7 +260,7 @@ Cypress.Commands.add('createNoteViaUi', (bypassParalelismNumber)=>{
             const note_id = path.split('/')[4];
             cy.wrap(note_id).as('note_id');
             cy.log(note_id)
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_id": user.user_id,
                 "user_email": user.user_email,
                 "user_name": user.user_name,
@@ -275,8 +275,8 @@ Cypress.Commands.add('createNoteViaUi', (bypassParalelismNumber)=>{
     })
 })
 
-Cypress.Commands.add('logInUserViaUiWhenReadFromApi', (bypassParalelismNumber) => {
-    cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+Cypress.Commands.add('logInUserViaUiWhenReadFromApi', (randomNumber) => {
+    cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {
             user_email: response.user_email,
             user_id: response.user_id,
@@ -298,7 +298,7 @@ Cypress.Commands.add('logInUserViaUiWhenReadFromApi', (bypassParalelismNumber) =
             cy.get('[data-testid="user-name"]').should('have.value', user.user_name).should('be.visible')
             expect(response.body.message).to.eq('Login successful')
             expect(response.statusCode).to.eq(200)
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_id": user.user_id,
                 "user_email": user.user_email,
                 "user_name": user.user_name,
@@ -309,8 +309,8 @@ Cypress.Commands.add('logInUserViaUiWhenReadFromApi', (bypassParalelismNumber) =
     })
 })
 
-Cypress.Commands.add('deleteJsonFile', (bypassParalelismNumber) => {
-    cy.fsDeleteFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`)
+Cypress.Commands.add('deleteJsonFile', (randomNumber) => {
+    cy.fsDeleteFile(`cypress/fixtures/testdata-${randomNumber}.json`)
 })
 
 

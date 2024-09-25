@@ -9,7 +9,7 @@ describe('/users_ui_and_api', () => {
     });
 
     it('Creates a new user account via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
+        const randomNumber = faker.finance.creditCardNumber() 
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -34,7 +34,7 @@ describe('/users_ui_and_api', () => {
             expect(response.body.message).to.eq('User account created successfully')
             expect(response.statusCode).to.eq(201)
             //Here we will write api.json file to use api requests to spped up test execution
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_email": user.email,
                 "user_name": user.name,
                 "user_password": user.password,
@@ -42,16 +42,16 @@ describe('/users_ui_and_api', () => {
             })
         })
         //Login in and deleting the user are not part of the test scope, so they can be executed by API request to speed up test execution.
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
 
     })
 
     it('Log in as an existing user via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -73,7 +73,7 @@ describe('/users_ui_and_api', () => {
                 cy.get('[data-testid="user-name"]').should('have.value', user.user_name).should('be.visible')
                 expect(response.body.message).to.eq('Login successful')
                 expect(response.statusCode).to.eq(200)
-                cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+                cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                     "user_id": user.user_id,
                     "user_email": user.user_email,
                     "user_name": user.user_name,
@@ -82,14 +82,14 @@ describe('/users_ui_and_api', () => {
                 })
             })
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Log in as an existing user via UI and API - Wrong password', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -104,15 +104,15 @@ describe('/users_ui_and_api', () => {
             cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
         })
         //correct login to login, get the token and delete the user to clean the environment.
-        cy.logInUserViaApi(bypassParalelismNumber)   
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.logInUserViaApi(randomNumber)   
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Log in as an existing user via UI and API - Invalid e-mail', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -127,64 +127,64 @@ describe('/users_ui_and_api', () => {
             cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
         })
         //correct login to login, get the token and delete the user to clean the environment.
-        cy.logInUserViaApi(bypassParalelismNumber)   
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.logInUserViaApi(randomNumber)   
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Retrieve user profile information via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)     
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)     
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Update user profile information via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)        
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
         cy.contains('button', 'Update profile').click()
         cy.get('[data-testid="alert-message"]').contains('Profile updated successful').should('be.visible')
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Update user profile information via UI and API - Invalid company name', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)       
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)       
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type('e')
         cy.contains('button', 'Update profile').click()
         cy.get('.mb-4 > .invalid-feedback').contains('company name should be between 4 and 30 characters').should('be.visible')
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)           
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)           
     })
 
     it('Update user profile information via UI and API - Invalid phone number', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)         
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)         
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 2 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
         cy.contains('button', 'Update profile').click()
         cy.get(':nth-child(2) > .mb-2 > .invalid-feedback').contains('Phone number should be between 8 and 20 digits').should('be.visible')
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Change a user\'s password via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber) 
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)       
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber) 
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)       
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
                 new_password: faker.internet.password({ length: 8 })
@@ -197,15 +197,15 @@ describe('/users_ui_and_api', () => {
             cy.contains('button', 'Update password').click()
             cy.get('[data-testid="alert-message"]').contains('The password was successfully updated').should('be.visible')
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Change a user\'s password via UI and API - Type same password', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)        
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)        
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password
             } 
@@ -217,30 +217,30 @@ describe('/users_ui_and_api', () => {
             cy.contains('button', 'Update password').click()
             cy.get('[data-testid="alert-message"]').contains('The new password should be different from the current password').should('be.visible')
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)         
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)         
     })
 
     it('Log out a user via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber) 
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber) 
         cy.contains('button', 'Logout').click()
         cy.get('[href="/notes/app/login"]').contains('Login').should('be.visible')
-        cy.logInUserViaApi(bypassParalelismNumber) 
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.logInUserViaApi(randomNumber) 
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Delete user account via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber() 
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber) 
+        const randomNumber = faker.finance.creditCardNumber() 
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber) 
         cy.visit(baseAppUrl + '/profile')
         cy.contains('button', 'Delete Account').click()
         cy.get('[data-testid="note-delete-confirm"]').click()
         cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 })
 

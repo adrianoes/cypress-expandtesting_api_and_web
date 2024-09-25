@@ -7,7 +7,7 @@ describe('/users_api', () => {
 
     
     it('Creates a new user account via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
+        const randomNumber = faker.finance.creditCardNumber()
         const user = {            
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
             user_email: faker.internet.exampleEmail().toLowerCase(),
@@ -28,16 +28,16 @@ describe('/users_api', () => {
             expect(response.body.message).to.eq("User account created successfully")
             expect(response.status).to.eq(201)                
             cy.log(JSON.stringify(response.body.message))
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_email": user.user_email,
                 "user_id": response.body.data.id,
                 "user_name": user.user_name,                
                 "user_password": user.user_password
             })
         })
-        cy.logInUserViaApi(bypassParalelismNumber) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.logInUserViaApi(randomNumber) 
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Creates a new user account via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
@@ -64,9 +64,9 @@ describe('/users_api', () => {
     })
 
     it('Log in as an existing user via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -87,7 +87,7 @@ describe('/users_api', () => {
                 expect(response.body.message).to.eq("Login successful")
                 expect(response.status).to.eq(200)
                 cy.log(JSON.stringify(response.body.name))
-                cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+                cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                     "user_email": user.user_email,
                     "user_id": user.user_id,
                     "user_name": user.user_name,
@@ -96,14 +96,14 @@ describe('/users_api', () => {
                 })
             })
         }) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Log in as an existing user via API - Bad request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_password: response.user_password,
@@ -123,15 +123,15 @@ describe('/users_api', () => {
             })
         }) 
         //Login right so user can be deleted.
-        cy.logInUserViaApi(bypassParalelismNumber) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.logInUserViaApi(randomNumber) 
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Log in as an existing user via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_password: response.user_password,
@@ -151,16 +151,16 @@ describe('/users_api', () => {
             })
         }) 
         //Login right so user can be deleted.
-        cy.logInUserViaApi(bypassParalelismNumber) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)         
+        cy.logInUserViaApi(randomNumber) 
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)         
     })
 
     it('Retrieve user profile information via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -182,15 +182,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))               
             })
         })   
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Retrieve user profile information via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -213,15 +213,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))               
             })
         })   
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Retrieve user profile information via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_token: response.user_token
             }
@@ -237,15 +237,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))               
             })
         })   
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Update the user profile information via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => { 
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => { 
             const user = {
                 user_email: response.user_email,
                 user_id: response.user_id,
@@ -279,15 +279,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         })
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)         
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)         
     })
 
     it('Update the user profile information via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => { 
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => { 
             const user = {
                 user_name: response.user_name,
                 user_token: response.user_token
@@ -314,15 +314,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))  
             })
         })
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)      
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)      
     })
 
     it('Update the user profile information via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => { 
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => { 
             const user = {
                 user_name: response.user_name,
                 user_token: response.user_token
@@ -349,15 +349,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))  
             })
         })
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Change a user\'s password via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
                 user_token: response.user_token
@@ -379,15 +379,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         }) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Change a user\'s password via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
                 user_token: response.user_token
@@ -410,15 +410,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         }) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Change a user\'s password via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
                 user_token: response.user_token
@@ -441,15 +441,15 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))
             })
         }) 
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)         
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)         
     })
 
     it('Log out a user via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -464,16 +464,16 @@ describe('/users_api', () => {
             })
         })  
         //When login out, token becomes invalid, so there is the need to log in again to delete the user
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)       
+        cy.logInUserViaApi(randomNumber)
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)       
     })
 
     it('Log out a user via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -494,15 +494,15 @@ describe('/users_api', () => {
         //When login out, token becomes invalid, so there is the need to log in again to delete the user
         //Login out was not executed so we can directly delete the user without the need to login again.
         // cy.logInUserViaApi()
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)      
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)      
     })
 
     it('Log out a user via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -520,15 +520,15 @@ describe('/users_api', () => {
         //When login out, token becomes invalid, so there is the need to log in again to delete the user
         //Login out was not executed so we can directly delete the user without the need to login again.
         // cy.logInUserViaApi()
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)      
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)      
     })
 
     it('Delete user account via API', { tags: ['API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -541,14 +541,14 @@ describe('/users_api', () => {
                 cy.log(JSON.stringify(response.body.message))             
             })
         }) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Delete user account via API - Bad Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -566,15 +566,15 @@ describe('/users_api', () => {
             })
         }) 
         //call deleteUserViaApi() to delete the user after verify the unauthorized condition above
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 
     it('Delete user account via API - Unauthorized Request', { tags: ['API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaApi(bypassParalelismNumber)
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaApi(randomNumber)
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user_token = response.user_token;
             cy.api({
                 method: 'DELETE',
@@ -589,8 +589,8 @@ describe('/users_api', () => {
             })
         }) 
         //call deleteUserViaApi() to delete the user after verify the unauthorized condition above
-        cy.deleteUserViaApi(bypassParalelismNumber) 
-        cy.deleteJsonFile(bypassParalelismNumber)        
+        cy.deleteUserViaApi(randomNumber) 
+        cy.deleteJsonFile(randomNumber)        
     })
 })
 

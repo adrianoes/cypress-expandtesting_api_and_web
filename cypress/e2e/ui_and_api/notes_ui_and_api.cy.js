@@ -9,10 +9,10 @@ describe('/notes_ui_and_api', () => {
     });
 
     it('Create a new note via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {   
                 user_id: response.user_id,             
                 user_email: response.user_email,
@@ -49,7 +49,7 @@ describe('/notes_ui_and_api', () => {
                 const note_id = path.split('/')[4];
                 cy.wrap(note_id).as('note_id');
                 cy.log(note_id)
-                cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+                cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                     "user_id": user.user_id,
                     "user_email": user.user_email,
                     "user_name": user.user_name,
@@ -63,16 +63,16 @@ describe('/notes_ui_and_api', () => {
                 })  
             })     
         })
-        cy.deleteNoteViaApi(bypassParalelismNumber)
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteNoteViaApi(randomNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 
     it('Create a new note via UI and API - Invalid title', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note = {            
                 description: faker.word.words(5),
                 category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
@@ -87,15 +87,15 @@ describe('/notes_ui_and_api', () => {
             cy.contains('button', 'Create').click()
             cy.get(':nth-child(3) > .invalid-feedback').contains('Title should be between 4 and 100 characters').should('be.visible')
         })   
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 
     it('Create a new note via UI and API - Invalid description', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note = {            
                 title: faker.word.words(3),
                 category: faker.helpers.arrayElement(['Home', 'Work', 'Personal']),
@@ -110,15 +110,15 @@ describe('/notes_ui_and_api', () => {
             cy.contains('button', 'Create').click()
             cy.get(':nth-child(4) > .invalid-feedback').contains('Description should be between 4 and 1000 characters').should('be.visible')
         })   
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 
     it('Get all notes via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {   
                 user_id: response.user_id,             
                 user_email: response.user_email,
@@ -150,7 +150,7 @@ describe('/notes_ui_and_api', () => {
                 cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-footer > [data-testid="toggle-note-switch"]').should(arrayCompleted[k])
                 cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > [data-testid="note-card-title"]').should('have.css', 'background-color', arrayColor[k])
             })    
-            cy.writeFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`, {
+            cy.writeFile(`cypress/fixtures/testdata-${randomNumber}.json`, {
                 "user_token": user.user_token                
             })         
         })
@@ -163,17 +163,17 @@ describe('/notes_ui_and_api', () => {
             cy.get(':nth-child('+arrayIndex[k]+') > [data-testid="note-card"] > .card-footer > div > [data-testid="note-delete"]').click()        
             cy.get('[data-testid="note-delete-confirm"]').contains('Delete').click()
         })  
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 
     it('Update an existing note via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.createNoteViaApi(bypassParalelismNumber)
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.createNoteViaApi(randomNumber)
         //Read to grab note_id value 
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note_id =  response.note_id
             cy.visit(baseAppUrl + '/notes/' + note_id,)
             cy.contains('button', 'Edit').click()
@@ -192,18 +192,18 @@ describe('/notes_ui_and_api', () => {
             cy.get('[data-testid="note-card-description"]').contains(note.description).should('be.visible')
         })   
         //I could delete the user right away, but let this command be here even so.
-        cy.deleteNoteViaApi(bypassParalelismNumber)
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)    
+        cy.deleteNoteViaApi(randomNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)    
     })    
 
     it('Update an existing note via UI and API - Invalid title', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.createNoteViaApi(bypassParalelismNumber)
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.createNoteViaApi(randomNumber)
         //Read to grab note_id value 
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note_id =  response.note_id
             cy.visit(baseAppUrl + '/notes/' + note_id,)
             cy.contains('button', 'Edit').click()
@@ -218,17 +218,17 @@ describe('/notes_ui_and_api', () => {
             cy.contains('button', 'Save').click()
             cy.get(':nth-child(3) > .invalid-feedback').contains('Title should be between 4 and 100 characters').should('be.visible')
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 
     it('Update an existing note via UI and API - Invalid description', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.createNoteViaApi(bypassParalelismNumber)
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.createNoteViaApi(randomNumber)
         //Read to grab note_id value 
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note_id =  response.note_id
             cy.visit(baseAppUrl + '/notes/' + note_id,)
             cy.contains('button', 'Edit').click()
@@ -242,17 +242,17 @@ describe('/notes_ui_and_api', () => {
             cy.contains('button', 'Save').click()
             cy.get(':nth-child(4) > .invalid-feedback').contains('Description should be between 4 and 1000 characters').should('be.visible')
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })    
 
     it('Update the completed status of a note via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.createNoteViaApi(bypassParalelismNumber)
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.createNoteViaApi(randomNumber)
         //Read to grab note_id value 
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note_id =  response.note_id
             cy.visit(baseAppUrl + '/notes/' + note_id,)
             cy.contains('button', 'Edit').click()      
@@ -260,23 +260,23 @@ describe('/notes_ui_and_api', () => {
             cy.contains('button', 'Save').click()
             cy.get('[data-testid="toggle-note-switch"]').should('not.be.checked')
             //We can delete the user right away, but let this command be here even so.
-            cy.deleteNoteViaApi(bypassParalelismNumber)
-            cy.deleteUserViaApi(bypassParalelismNumber)
-            cy.deleteJsonFile(bypassParalelismNumber)
+            cy.deleteNoteViaApi(randomNumber)
+            cy.deleteUserViaApi(randomNumber)
+            cy.deleteJsonFile(randomNumber)
         })        
     })
 
     it('Delete a note via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] }, () => {
-        const bypassParalelismNumber = faker.finance.creditCardNumber()
-        cy.createUserViaApi(bypassParalelismNumber)
-        cy.logInUserViaUiWhenReadFromApi(bypassParalelismNumber)  
-        cy.createNoteViaApi(bypassParalelismNumber)
+        const randomNumber = faker.finance.creditCardNumber()
+        cy.createUserViaApi(randomNumber)
+        cy.logInUserViaUiWhenReadFromApi(randomNumber)  
+        cy.createNoteViaApi(randomNumber)
         //Read to grab note_id value 
-        cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+        cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const note_id =  response.note_id
             cy.visit(baseAppUrl + '/notes/' + note_id,)
             cy.contains('button', 'Delete').click()
-            cy.readFile(`cypress/fixtures/testdata-${bypassParalelismNumber}.json`).then(response => {
+            cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
                 const note = {
                     note_title: response.note_title
                 }          
@@ -284,8 +284,8 @@ describe('/notes_ui_and_api', () => {
                 cy.get('[data-testid="note-delete-confirm"]').contains('Delete').click()
             })
         })
-        cy.deleteUserViaApi(bypassParalelismNumber)
-        cy.deleteJsonFile(bypassParalelismNumber)
+        cy.deleteUserViaApi(randomNumber)
+        cy.deleteJsonFile(randomNumber)
     })
 })
 
