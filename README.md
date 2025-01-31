@@ -17,7 +17,7 @@ UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/a
 | Cypress Helper                | v1.2.2  | Optional.                                                       |
 | cypress-plugin-api            | 2.11.1  | Optional. Recommended so you can observe API traces in browser. |
 | @faker-js/faker               | 8.4.1   | Optional. Recommended so you will not be using same test data.  |
-
+| mochawesome                   | 7.1.3   | Optional.                                                       |
 
 # Installation:
 
@@ -41,6 +41,7 @@ Check then both to add both options in context menu.
 - Execute ```npm i -D @cypress/grep``` to install @cypress/grep.
 - Execute ```npm install cypress-fs --save-dev``` to install Cypress-fs.
 - Execute ```npm i cypress-parallel``` to install cypress-parallel plugin.
+- Execute ```npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator``` to install mochawesome reporter.
 - Execute ```npx cypress open``` to open cypress.
 - Hit :point_right:**E2E Testing** configuration option. 
 - Keep all the configuration files options checked and hit :point_right:**Continue**.
@@ -57,6 +58,7 @@ Check then both to add both options in context menu.
 - Execute ```CYPRESS_grepTags=NEGATIVE,UI yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "UI".
 - Execute ```CYPRESS_grepTags=-UI_AND_API yarn cypress run``` to execute cypress tests not tagged as "UI_AND_API".
 - Execute ```npm run cy:parallel``` to execute cypress tests in parallel.
+- Execute ```npx cypress run``` to execute cypress tests in parallel and then execute ```npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json``` and ```npx marge cypress/reports/merged-report.json -o cypress/reports --inline``` to merge the individual test suite reports in a .json file and generate .html report respectively. 
 
 # Support:
 
