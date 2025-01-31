@@ -1,26 +1,49 @@
-name: End-to-end tests
-on: push
+name: Run Cypress Tests and Generate Report
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
+
     steps:
-      - name: Checkout
+      # 1. Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Install dependencies
       - name: Install dependencies
-        run: npm install
-
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          command: npx cypress run
-
-      - name: Merge Mochawesome reports
         run: |
-          npx mochawesome-merge cypress/reports/*.json > ./reports/merged-report.json
-          npx marge ./reports/merged-report.json -o ./reports
+          npm install
+          npm install @faker-js/faker --save-dev
+          npm install cypress-fs --save-dev
 
+      # 3. Run Cypress tests
+      - name: Run Cypress tests
+        run: npx cypress run
+
+      # 4. Merge Cypress test reports
+      - name: Merge Cypress test reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
+
+      # 5. Generate the HTML report
+      - name: Generate HTML report
+        run: npx marge cypress/reports/merged-report.json -o cypress/reports --inline
+
+      # 6. Create reports directory
+      - name: Create reports directory
+        run: mkdir -p ./reports
+
+      # 7. Move the HTML report to the reports directory
+      - name: Move HTML report to reports folder
+        run: mv cypress/reports/merged-report.html ./reports/
+
+      # 8. Upload the HTML report as an artifact
       - name: Upload Cypress test report
         uses: actions/upload-artifact@v4
         with:
