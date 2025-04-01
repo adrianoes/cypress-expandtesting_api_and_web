@@ -13,39 +13,49 @@ jobs:
     steps:
       # 1. Checkout the repository
       - uses: actions/checkout@v4
+
+      # 2. Setup Node.js version
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '18' # Alterado para Node.js 18
 
-      # 2. Install dependencies
+      # 3. Set npm registry
+      - name: Set npm registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      # 4. Clean npm cache
+      - name: Clean npm cache
+        run: npm cache clean --force
+
+      # 5. Install dependencies
       - name: Install dependencies
         run: |
           npm install
           npm install @faker-js/faker --save-dev
           npm install cypress-fs --save-dev
 
-      # 3. Run Cypress tests
+      # 6. Run Cypress tests
       - name: Run Cypress tests
         run: npx cypress run
 
-      # 4. Merge Cypress test reports
+      # 7. Merge Cypress test reports
       - name: Merge Cypress test reports
         run: |
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
 
-      # 5. Generate the HTML report
+      # 8. Generate HTML report
       - name: Generate HTML report
         run: npx marge cypress/reports/merged-report.json -o cypress/reports --inline
 
-      # 6. Create reports directory
+      # 9. Create reports directory
       - name: Create reports directory
         run: mkdir -p ./reports
 
-      # 7. Move the HTML report to the reports directory
+      # 10. Move HTML report to reports folder
       - name: Move HTML report to reports folder
         run: mv cypress/reports/merged-report.html ./reports/
 
-      # 8. Upload the HTML report as an artifact
+      # 11. Upload the HTML report as an artifact
       - name: Upload Cypress test report
         uses: actions/upload-artifact@v4
         with:
