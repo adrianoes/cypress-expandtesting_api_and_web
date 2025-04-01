@@ -138,7 +138,7 @@ Cypress.Commands.add('createNoteViaApi', (randomNumber) => {
     })        
 })
 
-Cypress.Commands.add('logInUserViaUi', (randomNumber) => {
+Cypress.Commands.add('logInUserViaWeb', (randomNumber) => {
     cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {
             user_email: response.user_email,
@@ -172,14 +172,14 @@ Cypress.Commands.add('logInUserViaUi', (randomNumber) => {
     })
 })
 
-Cypress.Commands.add('deleteUserViaUi', () =>{
+Cypress.Commands.add('deleteUserViaWeb', () =>{
     cy.visit(baseAppUrl + '/profile')
     cy.contains('button', 'Delete Account').click()
     cy.get('[data-testid="note-delete-confirm"]').click()
     cy.get('[data-testid="alert-message"]').contains('Your account has been deleted. You should create a new account to continue.').should('be.visible')
 })
 
-Cypress.Commands.add('createUserViaUi', (randomNumber)=>{
+Cypress.Commands.add('createUserViaWeb', (randomNumber)=>{
     const user = {
         name: faker.person.fullName(), 
         //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -212,7 +212,7 @@ Cypress.Commands.add('createUserViaUi', (randomNumber)=>{
     })
 })
 
-Cypress.Commands.add('deleteNoteViaUi', (randomNumber) =>{
+Cypress.Commands.add('deleteNoteViaWeb', (randomNumber) =>{
     cy.contains('button', 'Delete').click()
     cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const note = {
@@ -223,8 +223,8 @@ Cypress.Commands.add('deleteNoteViaUi', (randomNumber) =>{
     })
 })
 
-Cypress.Commands.add('createNoteViaUi', (randomNumber)=>{
-    //no need to read this for now but I'll let it here so later I can use it for using API requests in UI tests. Same for writing.
+Cypress.Commands.add('createNoteViaWeb', (randomNumber)=>{
+    //no need to read this for now but I'll let it here so later I can use it for using API requests in Web tests. Same for writing.
     cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {   
             user_id: response.user_id,             
@@ -275,7 +275,7 @@ Cypress.Commands.add('createNoteViaUi', (randomNumber)=>{
     })
 })
 
-Cypress.Commands.add('logInUserViaUiWhenReadFromApi', (randomNumber) => {
+Cypress.Commands.add('logInUserViaWebWhenReadFromApi', (randomNumber) => {
     cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
         const user = {
             user_email: response.user_email,

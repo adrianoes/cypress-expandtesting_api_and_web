@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('/users_ui', () => {
+describe('/users_web', () => {
 
     const baseAppUrl = Cypress.env('baseAppUrl')
     
@@ -8,7 +8,7 @@ describe('/users_ui', () => {
         cy.visit(baseAppUrl)
     });
 
-    it('Creates a new user account via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Creates a new user account via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         const user = {
             name: faker.person.fullName(), 
@@ -40,12 +40,12 @@ describe('/users_ui', () => {
                 "user_id": response.body.data.id
             })
         })
-        cy.logInUserViaUi(randomNumber)
-        cy.deleteUserViaUi()
+        cy.logInUserViaWeb(randomNumber)
+        cy.deleteUserViaWeb()
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Creates a new user account via UI - Invalid e-mail', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Creates a new user account via WEB - Invalid e-mail', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -64,7 +64,7 @@ describe('/users_ui', () => {
         cy.get('[data-testid="alert-message"]').contains('A valid email address is required').should('be.visible')
     })
 
-    it('Creates a new user account via UI - Wrong password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Creates a new user account via WEB - Wrong password', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const user = {
             name: faker.person.fullName(), 
             //e-mail faker generates faker upper case e-mails. Responses present lower case e-mails. Below function will help.
@@ -83,9 +83,9 @@ describe('/users_ui', () => {
         cy.get('.mb-3 > .invalid-feedback').contains('Passwords don\'t match!').should('be.visible')
     })
 
-    it('Log in as an existing user via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Log in as an existing user via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
+        cy.createUserViaWeb(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
@@ -117,13 +117,13 @@ describe('/users_ui', () => {
                 })
             })
         })
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Log in as an existing user via UI - Wrong password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via WEB - Wrong password', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
+        cy.createUserViaWeb(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
@@ -139,14 +139,14 @@ describe('/users_ui', () => {
             cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
         })
         //correct login to login, get the token and delete the user to clean the environment.
-        cy.logInUserViaUi(randomNumber)   
-        cy.deleteUserViaUi()       
+        cy.logInUserViaWeb(randomNumber)   
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Log in as an existing user via UI - Invalid e-mail', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via WEB - Invalid e-mail', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()        
-        cy.createUserViaUi(randomNumber)
+        cy.createUserViaWeb(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_email: response.user_email,
@@ -162,63 +162,63 @@ describe('/users_ui', () => {
             cy.get('[data-testid="alert-message"]').contains('Incorrect email address or password').should('be.visible')       
         })
         //correct login to login, get the token and delete the user to clean the environment.
-        cy.logInUserViaUi(randomNumber)   
-        cy.deleteUserViaUi()       
+        cy.logInUserViaWeb(randomNumber)   
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)      
     })
 
-    it('Retrieve user profile information via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Retrieve user profile information via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)      
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)      
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)      
     })
 
-    it('Update user profile information via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Update user profile information via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)        
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
         cy.contains('button', 'Update profile').click()
         cy.get('[data-testid="alert-message"]').contains('Profile updated successful').should('be.visible')
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)    
     })
 
-    it('Update user profile information via UI - Invalid company name', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via WEB - Invalid company name', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)        
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type('e')
         cy.contains('button', 'Update profile').click()
         cy.get('.mb-4 > .invalid-feedback').contains('company name should be between 4 and 30 characters').should('be.visible')
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Update user profile information via UI - Invalid phone number', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via WEB - Invalid phone number', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)        
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 2 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
         cy.contains('button', 'Update profile').click()
         cy.get(':nth-child(2) > .mb-2 > .invalid-feedback').contains('Phone number should be between 8 and 20 digits').should('be.visible')
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Change a user\'s password via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Change a user\'s password via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)        
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)        
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
@@ -232,14 +232,14 @@ describe('/users_ui', () => {
             cy.contains('button', 'Update password').click()
             cy.get('[data-testid="alert-message"]').contains('The password was successfully updated').should('be.visible')
         })
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)      
     })
 
-    it('Change a user\'s password via UI - Type same password', { tags: ['UI', 'FULL', 'NEGATIVE'] },  () => {
+    it('Change a user\'s password via WEB - Type same password', { tags: ['WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)        
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)        
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password
@@ -252,25 +252,25 @@ describe('/users_ui', () => {
             cy.contains('button', 'Update password').click()
             cy.get('[data-testid="alert-message"]').contains('The new password should be different from the current password').should('be.visible')
         })
-        cy.deleteUserViaUi()       
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)     
     })
 
-    it('Log out a user via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Log out a user via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber) 
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber) 
         cy.contains('button', 'Logout').click()
         cy.get('[href="/notes/app/login"]').contains('Login').should('be.visible')
-        cy.logInUserViaUi(randomNumber) 
-        cy.deleteUserViaUi()       
+        cy.logInUserViaWeb(randomNumber) 
+        cy.deleteUserViaWeb()       
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Delete user account via UI', { tags: ['UI', 'BASIC', 'FULL'] },  () => {
+    it('Delete user account via WEB', { tags: ['WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber()
-        cy.createUserViaUi(randomNumber)
-        cy.logInUserViaUi(randomNumber)
+        cy.createUserViaWeb(randomNumber)
+        cy.logInUserViaWeb(randomNumber)
         cy.visit(baseAppUrl + '/profile')
         cy.contains('button', 'Delete Account').click()
         cy.get('[data-testid="note-delete-confirm"]').click()

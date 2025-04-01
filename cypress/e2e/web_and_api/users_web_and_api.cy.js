@@ -8,7 +8,7 @@ describe('/users_ui_and_api', () => {
         cy.visit(baseAppUrl)
     });
 
-    it('Creates a new user account via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Creates a new user account via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         const user = {
             name: faker.person.fullName(), 
@@ -48,7 +48,7 @@ describe('/users_ui_and_api', () => {
 
     })
 
-    it('Log in as an existing user via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Log in as an existing user via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -86,7 +86,7 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Log in as an existing user via UI and API - Wrong password', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via WEB and API - Wrong password', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -109,7 +109,7 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Log in as an existing user via UI and API - Invalid e-mail', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via WEB and API - Invalid e-mail', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -132,19 +132,19 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Retrieve user profile information via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Retrieve user profile information via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)     
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)     
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.deleteUserViaApi(randomNumber)
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Update user profile information via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Update user profile information via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)        
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)        
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
@@ -154,10 +154,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Update user profile information via UI and API - Invalid company name', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via WEB and API - Invalid company name', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)       
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)       
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 12 }))
         cy.get('input[name="company"]').click().type('e')
@@ -167,10 +167,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)           
     })
 
-    it('Update user profile information via UI and API - Invalid phone number', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via WEB and API - Invalid phone number', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)         
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)         
         cy.get('[href="/notes/app/profile"]').contains('Profile').should('be.visible').click()
         cy.get('input[name="phone"]').click().type(faker.string.numeric({ length: 2 }))
         cy.get('input[name="company"]').click().type(faker.internet.userName())
@@ -180,10 +180,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Change a user\'s password via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Change a user\'s password via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber) 
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)       
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)       
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password,
@@ -201,10 +201,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Change a user\'s password via UI and API - Type same password', { tags: ['UI_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Change a user\'s password via WEB and API - Type same password', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber)        
+        cy.logInUserViaWebWhenReadFromApi(randomNumber)        
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
             const user = {
                 user_password: response.user_password
@@ -221,10 +221,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)         
     })
 
-    it('Log out a user via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Log out a user via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber) 
+        cy.logInUserViaWebWhenReadFromApi(randomNumber) 
         cy.contains('button', 'Logout').click()
         cy.get('[href="/notes/app/login"]').contains('Login').should('be.visible')
         cy.logInUserViaApi(randomNumber) 
@@ -232,10 +232,10 @@ describe('/users_ui_and_api', () => {
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Delete user account via UI and API', { tags: ['UI_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Delete user account via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
-        cy.logInUserViaUiWhenReadFromApi(randomNumber) 
+        cy.logInUserViaWebWhenReadFromApi(randomNumber) 
         cy.visit(baseAppUrl + '/profile')
         cy.contains('button', 'Delete Account').click()
         cy.get('[data-testid="note-delete-confirm"]').click()

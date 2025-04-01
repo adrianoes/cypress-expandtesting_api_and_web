@@ -1,6 +1,6 @@
 # cypress-expandtesting_web_and_api
 
-UI and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. This project contains basic examples on how to use cypress to test UI, API and how to combine UI and API tests. Good practices such as hooks, custom commands and tags, among others, are used. All the necessary support documentation to develop this project is placed here. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands are used, the assertion code to each test is kept in it so we can work independently in each test. It creates one .json file for each test so we can share data between different requests in the test. The .json file is excluded after each test execution.  
+WEB and API testing in [expandtesting](https://practice.expandtesting.com/notes/app/) note app. This project contains basic examples on how to use cypress to test WEB, API and how to combine WEB and API tests. Good practices such as hooks, custom commands and tags, among others, are used. All the necessary support documentation to develop this project is placed here. When it comes to the API part, it deals with the x-www-form-urlencoded content type. Although custom commands are used, the assertion code to each test is kept in it so we can work independently in each test. It creates one .json file for each test so we can share data between different requests in the test. The .json file is excluded after each test execution.  
 
 # Pre-requirements:
 
@@ -55,8 +55,8 @@ Check then both to add both options in context menu.
 - Execute ```yarn cypress run``` or ```npx cypress run``` to execute cypress in headless mode.
 - Execute ```CYPRESS_grepTags=BASIC yarn cypress run``` to execute cypress tests tagged as "BASIC"
 - Execute ```CYPRESS_grepTags=FULL+API yarn cypress run``` to execute cypress tests tagged as both "FULL" and "API".
-- Execute ```CYPRESS_grepTags=NEGATIVE,UI yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "UI".
-- Execute ```CYPRESS_grepTags=-UI_AND_API yarn cypress run``` to execute cypress tests not tagged as "UI_AND_API".
+- Execute ```CYPRESS_grepTags=NEGATIVE,WEB yarn cypress run``` to execute cypress tests tagged as "NEGATIVE" or "WEB".
+- Execute ```CYPRESS_grepTags=-WEB_AND_API yarn cypress run``` to execute cypress tests not tagged as "WEB_AND_API".
 - Execute ```npm run cy:parallel``` to execute cypress tests in parallel.
 - Execute ```npx cypress run``` to execute cypress tests and then execute ```npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json``` and ```npx marge cypress/reports/merged-report.json -o cypress/reports --inline``` to merge the individual test suite reports in a .json file and generate .html report respectively. 
 
@@ -82,4 +82,4 @@ Check then both to add both options in context menu.
 
 # Tips:
 
-- UI and API tests to send password reset link to user's email and API tests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
+- WEB and API tests to send password reset link to user's email and API tests to verify a password reset token and reset a user's password must be tested manually as they rely on e-mail verification.
