@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('/users_ui_and_api', () => {
+describe('/users_web_and_api', () => {
 
     const baseAppUrl = Cypress.env('baseAppUrl')
     

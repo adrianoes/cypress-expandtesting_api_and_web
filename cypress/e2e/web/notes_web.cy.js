@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('/notes_ui', () => {
+describe('/notes_web', () => {
 
     const baseAppUrl = Cypress.env('baseAppUrl')
     
