@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('/notes_web_and_api', () => {
+describe('/notes_api_and_web', () => {
 
     const baseAppUrl = Cypress.env('baseAppUrl')
     
@@ -8,7 +8,7 @@ describe('/notes_web_and_api', () => {
         cy.visit(baseAppUrl)
     });
 
-    it('Create a new note via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] }, () => {
+    it('Create a new note via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -68,7 +68,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Create a new note via WEB and API - Invalid title', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] }, () => {
+    it('Create a new note via API and WEB - Invalid title', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -91,7 +91,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Create a new note via WEB and API - Invalid description', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] }, () => {
+    it('Create a new note via API and WEB - Invalid description', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -114,7 +114,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Get all notes via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] }, () => {
+    it('Get all notes via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -167,7 +167,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Update an existing note via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] }, () => {
+    it('Update an existing note via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -197,7 +197,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)    
     })    
 
-    it('Update an existing note via WEB and API - Invalid title', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] }, () => {
+    it('Update an existing note via API and WEB - Invalid title', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -222,7 +222,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })
 
-    it('Update an existing note via WEB and API - Invalid description', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] }, () => {
+    it('Update an existing note via API and WEB - Invalid description', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -246,7 +246,7 @@ describe('/notes_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)
     })    
 
-    it('Update the completed status of a note via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] }, () => {
+    it('Update the completed status of a note via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  
@@ -266,7 +266,7 @@ describe('/notes_web_and_api', () => {
         })        
     })
 
-    it('Delete a note via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] }, () => {
+    it('Delete a note via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] }, () => {
         const randomNumber = faker.finance.creditCardNumber()
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)  

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('/users_web_and_api', () => {
+describe('/users_api_and_web', () => {
 
     const baseAppUrl = Cypress.env('baseAppUrl')
     
@@ -8,7 +8,7 @@ describe('/users_web_and_api', () => {
         cy.visit(baseAppUrl)
     });
 
-    it('Creates a new user account via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Creates a new user account via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         const user = {
             name: faker.person.fullName(), 
@@ -48,7 +48,7 @@ describe('/users_web_and_api', () => {
 
     })
 
-    it('Log in as an existing user via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Log in as an existing user via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -86,7 +86,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Log in as an existing user via WEB and API - Wrong password', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via API and WEB - Wrong password', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -109,7 +109,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Log in as an existing user via WEB and API - Invalid e-mail', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Log in as an existing user via API and WEB - Invalid e-mail', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.readFile(`cypress/fixtures/testdata-${randomNumber}.json`).then(response => {
@@ -132,7 +132,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Retrieve user profile information via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Retrieve user profile information via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)     
@@ -141,7 +141,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Update user profile information via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Update user profile information via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)        
@@ -154,7 +154,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Update user profile information via WEB and API - Invalid company name', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via API and WEB - Invalid company name', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)       
@@ -167,7 +167,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)           
     })
 
-    it('Update user profile information via WEB and API - Invalid phone number', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Update user profile information via API and WEB - Invalid phone number', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)         
@@ -180,7 +180,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Change a user\'s password via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Change a user\'s password via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber) 
         cy.logInUserViaWebWhenReadFromApi(randomNumber)       
@@ -201,7 +201,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)       
     })
 
-    it('Change a user\'s password via WEB and API - Type same password', { tags: ['WEB_AND_API', 'FULL', 'NEGATIVE'] },  () => {
+    it('Change a user\'s password via API and WEB - Type same password', { tags: ['API_AND_WEB', 'FULL', 'NEGATIVE'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber)        
@@ -221,7 +221,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)         
     })
 
-    it('Log out a user via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Log out a user via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber) 
@@ -232,7 +232,7 @@ describe('/users_web_and_api', () => {
         cy.deleteJsonFile(randomNumber)        
     })
 
-    it('Delete user account via WEB and API', { tags: ['WEB_AND_API', 'BASIC', 'FULL'] },  () => {
+    it('Delete user account via API and WEB', { tags: ['API_AND_WEB', 'BASIC', 'FULL'] },  () => {
         const randomNumber = faker.finance.creditCardNumber() 
         cy.createUserViaApi(randomNumber)
         cy.logInUserViaWebWhenReadFromApi(randomNumber) 
