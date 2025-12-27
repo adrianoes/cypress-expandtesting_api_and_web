@@ -6,18 +6,17 @@ API and WEB testing in [expandtesting](https://practice.expandtesting.com/notes/
 
 | Requirement                   | Version | Note                                                            |
 | :---------------------------- |:--------| :---------------------------------------------------------------|
-| Node.js                       | 18.18.0 | -                                                               |
-| npm                           | 10.2.4  | -                                                               |
-| Yarn                          | 1.22.19 | Optional.                                                       |
-| Cypress                       | 13.10.0 | -                                                               |
-| Cypress-fs                    | 0.2.5   | -                                                               |
+| Node.js                       | 22.16.0 | -                                                               |
+| npm                           | 10.9.2  | -                                                               |
+| Cypress                       | 15.8.1  | -                                                               |
+| Cypress-fs                    | 0.2.8   | -                                                               |
 | cypress-parallel              | 0.14.0  | Optional.                                                       |
-| Visual Studio Code            | 1.89.1  | Optional. Recommended so you can use Cypress Helper extension.  |
-| @cypress/grep                 | 4.0.2   | Optional. Recommended so you can filter the tests by tags       |
-| Cypress Helper                | v1.2.2  | Optional.                                                       |
-| cypress-plugin-api            | 2.11.1  | Optional. Recommended so you can observe API traces in browser. |
+| Visual Studio Code            | 1.107.1 | Optional. Recommended so you can use Cypress Helper extension.  |
+| @cypress/grep                 | 4.1.1   | Optional. Recommended so you can filter the tests by tags       |
+| Cypress Helper                | 1.2.2   | Optional.                                                       |
+| cypress-plugin-api            | 2.11.2  | Optional. Recommended so you can observe API traces in browser. |
 | @faker-js/faker               | 8.4.1   | Optional. Recommended so you will not be using same test data.  |
-| mochawesome                   | 7.1.3   | Optional.                                                       |
+| mochawesome                   | 7.1.4   | Optional.                                                       |
 
 # Installation:
 

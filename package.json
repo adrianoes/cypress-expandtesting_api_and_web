@@ -5,13 +5,14 @@
   "author": "Adriano Santos",
   "license": "MIT",
   "devDependencies": {
-    "@cypress/grep": "^4.0.2",
+    "@cypress/grep": "^4.1.1",
     "@faker-js/faker": "^8.4.1",
-    "cypress-fs": "^0.2.5",
-    "cypress-plugin-api": "^2.11.1",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.2.0"
+    "cypress": "^15.8.1",
+    "cypress-fs": "^0.2.8",
+    "cypress-plugin-api": "^2.11.2",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.0",
+    "mochawesome-report-generator": "^6.3.2"
   },
   "dependencies": {
     "cypress-parallel": "^0.14.0"
